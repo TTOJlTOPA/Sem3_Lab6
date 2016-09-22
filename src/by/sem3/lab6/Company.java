@@ -4,9 +4,6 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by Валерий on 22.09.2016.
- */
 class Company {
     String name;
     String shortTitle;
