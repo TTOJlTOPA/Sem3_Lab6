@@ -33,7 +33,9 @@ class Company {
         link = "-";
     }
 
-    //Company(String[] param) {}
+    Company(String[] param) {
+
+    }
 
     private boolean isName(String name) {
         Pattern pattern = Pattern.compile("^[a-zA-Z]+$");
