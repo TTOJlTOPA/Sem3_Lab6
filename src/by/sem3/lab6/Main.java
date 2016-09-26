@@ -12,7 +12,7 @@ public class Main {
         final String filePath = "resources/input.csv";
         try {
             String[] columns = nameOfColumns(filePath);
-            print(columns);
+            print(columns, readFromCSV(filePath));
         }
         catch (IOException e){
             System.out.println(e);
@@ -37,7 +37,12 @@ public class Main {
         return listOfCompanies;
     }
 
-    private static void print(String[] columnsNames){
+    private static void print(String[] columnsNames, List<Company> companyList){
         System.out.format("%9s%16s%19s%19s%28s%23s%12s%12s%20s%20s%15s%20s", columnsNames);
+        System.out.println();
+        for(Company iter : companyList){
+            iter.print();
+            System.out.println();
+        }
     }
 }
