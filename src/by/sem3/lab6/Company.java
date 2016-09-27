@@ -1,14 +1,12 @@
 package by.sem3.lab6;
 
 import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 class Company {
     private String name;
     private String shortTitle;
     private Date dateUpdate;
-    private String adress;
+    private String address;
     private Date dateFoundation;
     private int countEmployees;
     private String auditor;
@@ -22,7 +20,7 @@ class Company {
         name = "-";
         shortTitle = "-";
         dateUpdate = new Date(0, 0, 0);
-        adress = "-";
+        address = "-";
         dateFoundation = new Date(0, 0, 0);
         countEmployees = 0;
         auditor = "-";
@@ -36,9 +34,9 @@ class Company {
     Company(String[] param) {
         name = param[0];
         shortTitle = param[1];
-        dateUpdate = toDate(param[2]);
-        adress = param[3];
-        dateFoundation = toDate(param[4]);
+        dateUpdate = stringToDate(param[2]);
+        address = param[3];
+        dateFoundation = stringToDate(param[4]);
         countEmployees = Integer.parseInt(param[5]);
         auditor = param[6];
         phone = param[7];
@@ -48,24 +46,83 @@ class Company {
         link = param[11];
     }
 
-    private boolean isName(String name) {
-        Pattern pattern = Pattern.compile("[a-zA-Z]+");
-        Matcher matcher = pattern.matcher(name);
-        return matcher.matches();
-    }
-
-    private Date toDate(String date) {
+    private Date stringToDate(String date) {
         String[] dateParam;
-        dateParam = date.split("[.]");
-        return new Date(Integer.parseInt(dateParam[2]), Integer.parseInt(dateParam[1]),
+        dateParam = date.split("[.-]");
+        return new Date(Integer.parseInt(dateParam[2]), Integer.parseInt(dateParam[1]) - 1,
                 Integer.parseInt(dateParam[0]));
     }
 
-    public void print(){
+    public void print() {
         System.out.format("%9s%16s%19s%19s%28s%23d%12s%12s%20s%20s%15s%20s", name, shortTitle,
                 Integer.toString(dateUpdate.getDate()) + "." + Integer.toString(dateUpdate.getMonth()) + "." +
-                Integer.toString(dateUpdate.getYear()), adress, Integer.toString(dateFoundation.getDate()) + "." +
-                        Integer.toString(dateFoundation.getMonth()) + "." + Integer.toString(dateFoundation.getYear()),
+                        Integer.toString(dateUpdate.getYear()), address, Integer.toString(dateFoundation.getDate()) + "." +
+                        Integer.toString(dateFoundation.getMonth() + 1) + "." + Integer.toString(dateFoundation.getYear()),
                 countEmployees, auditor, phone, email, branch, activity, link);
+        System.out.println();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getShortTitle() {
+        return shortTitle;
+    }
+
+    public Date getDateUpdate() {
+        return dateUpdate;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public Date getDateFoundation() {
+        return dateFoundation;
+    }
+
+    public int getCountEmployees() {
+        return countEmployees;
+    }
+
+    public String getAuditor() {
+        return auditor;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getBranch() {
+        return branch;
+    }
+
+    public String getActivity() {
+        return activity;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public boolean isDateOfFoundationInInterval(String from, String to){
+        Date fromDate = stringToDate(from);
+        Date toDate = stringToDate(to);
+        if(dateFoundation.compareTo(fromDate) >= 0 && dateFoundation.compareTo(toDate) <= 0){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isCountOfEmployeesInInterval(int from, int to){
+        if(countEmployees >= from && countEmployees <= to){
+            return true;
+        }
+        return false;
     }
 }
