@@ -17,48 +17,55 @@ class Company {
     private String link;
 
     Company() {
-        name = "-";
-        shortTitle = "-";
-        dateUpdate = new Date(0, 0, 0);
-        address = "-";
-        dateFoundation = new Date(0, 0, 0);
-        countEmployees = 0;
-        auditor = "-";
-        phone = "-";
-        email = "-";
-        branch = "-";
-        activity = "-";
-        link = "-";
+        this.name = "-";
+        this.shortTitle = "-";
+        this.dateUpdate = new Date(0, 0, 0);
+        this.address = "-";
+        this.dateFoundation = new Date(0, 0, 0);
+        this.countEmployees = 0;
+        this.auditor = "-";
+        this.phone = "-";
+        this.email = "-";
+        this.branch = "-";
+        this.activity = "-";
+        this.link = "-";
     }
 
     Company(String[] param) {
-        name = param[0];
-        shortTitle = param[1];
-        dateUpdate = stringToDate(param[2]);
-        address = param[3];
-        dateFoundation = stringToDate(param[4]);
-        countEmployees = Integer.parseInt(param[5]);
-        auditor = param[6];
-        phone = param[7];
-        email = param[8];
-        branch = param[9];
-        activity = param[10];
-        link = param[11];
+        this.name = param[0];
+        this.shortTitle = param[1];
+        this.dateUpdate = stringToDate(param[2]);
+        this.address = param[3];
+        this.dateFoundation = stringToDate(param[4]);
+        this.countEmployees = Integer.parseInt(param[5]);
+        this.auditor = param[6];
+        this.phone = param[7];
+        this.email = param[8];
+        this.branch = param[9];
+        this.activity = param[10];
+        this.link = param[11];
     }
 
     private Date stringToDate(String date) {
         String[] dateParam;
-        dateParam = date.split("[.-]");
+        dateParam = date.split("[.]");
         return new Date(Integer.parseInt(dateParam[2]), Integer.parseInt(dateParam[1]) - 1,
                 Integer.parseInt(dateParam[0]));
     }
 
+    private String dateUpdateToString() {
+        return Integer.toString(dateUpdate.getDate()) + "." + Integer.toString(dateUpdate.getMonth() + 1) + "." +
+                Integer.toString(dateUpdate.getYear());
+    }
+
+    private String dateFoundationToString() {
+        return Integer.toString(dateFoundation.getDate()) + "." + Integer.toString(dateFoundation.getMonth() + 1)
+                + "." + Integer.toString(dateFoundation.getYear());
+    }
+
     public void print() {
-        System.out.format("%9s%16s%19s%19s%28s%23d%12s%12s%20s%20s%15s%20s", name, shortTitle,
-                Integer.toString(dateUpdate.getDate()) + "." + Integer.toString(dateUpdate.getMonth()) + "." +
-                        Integer.toString(dateUpdate.getYear()), address, Integer.toString(dateFoundation.getDate()) + "." +
-                        Integer.toString(dateFoundation.getMonth() + 1) + "." + Integer.toString(dateFoundation.getYear()),
-                countEmployees, auditor, phone, email, branch, activity, link);
+        System.out.format("%9s%16s%19s%19s%28s%23d%12s%12s%20s%20s%15s%20s", name, shortTitle, dateUpdateToString(),
+                address, dateFoundationToString(), countEmployees, auditor, phone, email, branch, activity, link);
         System.out.println();
     }
 
@@ -108,6 +115,23 @@ class Company {
 
     public String getLink() {
         return link;
+    }
+
+    public String toXML() {
+        return "\t<name>" + name + "</name>\n\t<shorttitle>" + shortTitle + "</shorttitle>\n\t<dateupdate>" +
+                dateUpdateToString() + "</dateupdate>\n\t<address>" + address + "</address>\n\t<datefoundation>" +
+                dateFoundationToString() + "</datefoundation>\n\t<countemployees>" + countEmployees +
+                "</countemployees>\n\t<auditor>" + auditor + "</auditor>\n\t<phone>" + phone + "</phone>\n\t<email>" +
+                email + "</email>\n\t<branch>" + branch + "</branch>\n\t<activity>" + activity +
+                "</activity>\n\t<link>" + link + "</link>\n";
+    }
+
+    public String toJSON() {
+        return "\t\"name\": \"" + name + "\",\n\t\"shortTitle\": \"" + shortTitle + "\",\n\t\"dateUpdate\": \"" +
+                dateUpdateToString() + "\",\n\t\"address\": \"" + address + "\",\n\t\"dateFoundation\": \"" +
+                dateFoundationToString() + "\",\n\t\"countEmployees\": \"" + countEmployees + "\",\n\t\"auditor\": \"" +
+                auditor + "\",\n\t\"phone\": \"" + phone + "\",\n\t\"email\": \"" + email + "\",\n\t\"branch\": \"" +
+                branch + "\",\n\t\"activity\": \"" + activity + "\",\n\t\"link\": \"" + link + "\"";
     }
 
     public boolean isDateOfFoundationInInterval(String from, String to){
