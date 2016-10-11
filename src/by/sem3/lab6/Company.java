@@ -16,7 +16,7 @@ class Company {
     private String activity;
     private String link;
 
-    Company() {
+    public Company() {
         this.name = "-";
         this.shortTitle = "-";
         this.dateUpdate = new Date(0, 0, 0);
@@ -31,7 +31,7 @@ class Company {
         this.link = "-";
     }
 
-    Company(String[] param) {
+    public Company(String[] param) {
         this.name = param[0];
         this.shortTitle = param[1];
         this.dateUpdate = stringToDate(param[2]);
@@ -134,17 +134,17 @@ class Company {
                 branch + "\",\n\t\"activity\": \"" + activity + "\",\n\t\"link\": \"" + link + "\"";
     }
 
-    public boolean isDateOfFoundationInInterval(String from, String to){
+    public boolean isDateOfFoundationInInterval(String from, String to) {
         Date fromDate = stringToDate(from);
         Date toDate = stringToDate(to);
-        if(dateFoundation.compareTo(fromDate) >= 0 && dateFoundation.compareTo(toDate) <= 0){
+        if (dateFoundation.compareTo(fromDate) >= 0 && dateFoundation.compareTo(toDate) <= 0) {
             return true;
         }
         return false;
     }
 
-    public boolean isCountOfEmployeesInInterval(int from, int to){
-        if(countEmployees >= from && countEmployees <= to){
+    public boolean isCountOfEmployeesInInterval(int from, int to) {
+        if (countEmployees >= from && countEmployees <= to) {
             return true;
         }
         return false;
