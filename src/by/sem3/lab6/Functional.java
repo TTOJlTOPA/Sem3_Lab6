@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
@@ -20,11 +18,11 @@ class Functional {
             try {
                 logger.write("Start read the table.");
                 String[] columns = nameOfColumns("resources/input.csv");
-                List<Company> listOfCompanies = readFromCSV("resources/input.csv");
+                Companies companies = new Companies("resources/input.csv");
                 logger.write("Read successful.");
-                print(columns, listOfCompanies);
+                companies.print(columns);
                 System.out.println("\n\n");
-                menu(listOfCompanies);
+                menu(companies);
                 logger.flush();
             } catch (IOException e) {
                 System.out.println(e);
@@ -36,7 +34,7 @@ class Functional {
         }
     }
 
-    public static void menu(List<Company> companyList) throws IOException, LoggerException {
+    public static void menu(Companies companies) throws IOException, LoggerException {
         Scanner scan = new Scanner(System.in);
         int answer;
         System.out.print("\tChoose an action:\n1. Find company by short title.\n2. Filter companies by branch.\n" +
@@ -45,35 +43,35 @@ class Functional {
         answer = scan.nextInt();
         switch (answer) {
             case 1:
-                case1(companyList);
+                case1(companies);
                 break;
             case 2:
-                case2(companyList);
+                case2(companies);
                 break;
             case 3:
-                case3(companyList);
+                case3(companies);
                 break;
             case 4:
-                case4(companyList);
+                case4(companies);
                 break;
             case 5:
-                case5(companyList);
+                case5(companies);
                 break;
             default:
                 throw new IOException("Your answer is not in range from 1 to 5.");
         }
     }
 
-    private static void case1(List<Company> companies) throws IOException, LoggerException {
+    private static void case1(Companies companies) throws IOException, LoggerException {
         logger.write("Start search.");
-        Company company = findByShortTitle(companies);
+        Company company = companies.findByShortTitle();
         if (company != null) {
             logger.write("Search successful.");
             logger.write("Start write to XML.");
-            writeToXML(company);
+            company.writeToXML();
             logger.write("Write to XML successful.");
             logger.write("Start write to JSON.");
-            writeToJSON(company);
+            company.writeToJSON();
             logger.write("Write to JSON successful.");
         } else {
             System.out.println("Not found.");
@@ -81,39 +79,39 @@ class Functional {
         }
     }
 
-    private static void case2(List<Company> companies) throws IOException, LoggerException {
+    private static void case2(Companies companies) throws IOException, LoggerException {
         Scanner scanner = new Scanner(System.in);
         String branch;
         System.out.print("Enter branch: ");
         branch = scanner.nextLine();
         logger.write("Start filter by branch.");
-        filterByBranch(companies, branch).forEach(comp -> comp.print());
+        companies.filterByBranch(branch).forEach(comp -> comp.print());
         logger.write("Filter successful.");
         logger.write("Start write to XML.");
-        writeToXML(filterByBranch(companies, branch));
+        writeToXML(companies.filterByBranch(branch));
         logger.write("Write to XML successful.");
         logger.write("Start write to JSON.");
-        writeToJSON(filterByBranch(companies, branch));
+        writeToJSON(companies.filterByBranch(branch));
         logger.write("Write to JSON successful.");
     }
 
-    private static void case3(List<Company> companies) throws IOException, LoggerException {
+    private static void case3(Companies companies) throws IOException, LoggerException {
         Scanner scanner = new Scanner(System.in);
         String activity;
         System.out.print("Enter activity: ");
         activity = scanner.nextLine();
         logger.write("Start filter by activity.");
-        filterByActivity(companies, activity).forEach(comp -> comp.print());
+        companies.filterByActivity(activity).forEach(comp -> comp.print());
         logger.write("Filter successful.");
         logger.write("Start write to XML.");
-        writeToXML(filterByActivity(companies, activity));
+        writeToXML(companies.filterByActivity(activity));
         logger.write("Write to XML successful.");
         logger.write("Start write to JSON.");
-        writeToJSON(filterByActivity(companies, activity));
+        writeToJSON(companies.filterByActivity(activity));
         logger.write("Write to JSON successful.");
     }
 
-    private static void case4(List<Company> companies) throws IOException, LoggerException {
+    private static void case4(Companies companies) throws IOException, LoggerException {
         Scanner scanner = new Scanner(System.in);
         String from;
         String to;
@@ -122,17 +120,17 @@ class Functional {
         System.out.print("To: ");
         to = scanner.nextLine();
         logger.write("Start filter by date of foundation.");
-        filterByDateOfFoundation(companies, from, to).forEach(comp -> comp.print());
+        companies.filterByDateOfFoundation(from, to).forEach(comp -> comp.print());
         logger.write("Filter successful.");
         logger.write("Start write to XML.");
-        writeToXML(filterByDateOfFoundation(companies, from, to));
+        writeToXML(companies.filterByDateOfFoundation(from, to));
         logger.write("Write to XML successful.");
         logger.write("Start write to JSON.");
-        writeToJSON(filterByDateOfFoundation(companies, from, to));
+        writeToJSON(companies.filterByDateOfFoundation(from, to));
         logger.write("Write to JSON successful.");
     }
 
-    private static void case5(List<Company> companies) throws IOException, LoggerException {
+    private static void case5(Companies companies) throws IOException, LoggerException {
         Scanner scanner = new Scanner(System.in);
         int fromNum;
         int toNum;
@@ -141,86 +139,19 @@ class Functional {
         System.out.print("To: ");
         toNum = scanner.nextInt();
         logger.write("Start filter by count of employees.");
-        filterByCountOfEmployees(companies, fromNum, toNum).forEach(comp -> comp.print());
+        companies.filterByCountOfEmployees(fromNum, toNum).forEach(comp -> comp.print());
         logger.write("Filter successful.");
         logger.write("Start write to XML.");
-        writeToXML(filterByCountOfEmployees(companies, fromNum, toNum));
+        writeToXML(companies.filterByCountOfEmployees(fromNum, toNum));
         logger.write("Write to XML successful.");
         logger.write("Start write to JSON.");
-        writeToJSON(filterByCountOfEmployees(companies, fromNum, toNum));
+        writeToJSON(companies.filterByCountOfEmployees(fromNum, toNum));
         logger.write("Write to JSON successful.");
     }
 
     public static String[] nameOfColumns(String path) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(path));
         return reader.readLine().split(";");
-    }
-
-    public static List<Company> readFromCSV(String path) throws IOException {
-        List<Company> listOfCompanies = new ArrayList<>();
-        String[] parameters;
-        BufferedReader reader = new BufferedReader(new FileReader(path));
-        String line;
-        reader.readLine();
-        while ((line = reader.readLine()) != null) {
-            parameters = line.split(";");
-            listOfCompanies.add(new Company(parameters));
-        }
-        return listOfCompanies;
-    }
-
-    public static void print(String[] columnsNames, List<Company> companyList) {
-        System.out.format("%9s%16s%19s%19s%28s%23s%12s%12s%20s%20s%15s%20s", columnsNames);
-        System.out.println();
-        for (Company iter : companyList) {
-            iter.print();
-        }
-    }
-
-    private static Company findByShortTitle(List<Company> companyList) throws IOException {
-        Scanner scan = new Scanner(System.in);
-        String title;
-        System.out.print("Enter short title: ");
-        title = scan.nextLine();
-        for (Company iter : companyList) {
-            if (title.equalsIgnoreCase(iter.getShortTitle())) {
-                return iter;
-            }
-        }
-        System.out.println("Not found.");
-        return null;
-    }
-
-    private static Stream<Company> filterByBranch(List<Company> companyList, String inBranch) throws IOException {
-        Stream<Company> selection;
-        selection = (companyList.stream()).filter(company -> (company.getBranch()).equalsIgnoreCase(inBranch));
-        return selection;
-    }
-
-    private static Stream<Company> filterByActivity(List<Company> companyList, String inActivity) throws IOException {
-        Stream<Company> selection;
-        selection = (companyList.stream()).filter(company -> (company.getActivity()).equalsIgnoreCase(inActivity));
-        return selection;
-    }
-
-    private static Stream<Company> filterByDateOfFoundation(List<Company> companyList, String fromDate, String toDate)
-            throws IOException {
-        Stream<Company> selection;
-        selection = (companyList.stream()).filter(company -> company.isDateOfFoundationInInterval(fromDate, toDate));
-        return selection;
-    }
-
-    private static Stream<Company> filterByCountOfEmployees(List<Company> companyList, int fromCount, int toCount)
-            throws IOException {
-        Stream<Company> selection;
-        selection = (companyList.stream()).filter(company -> company.isCountOfEmployeesInInterval(fromCount, toCount));
-        return selection;
-    }
-
-    private static void writeToXML(Company comp) throws IOException {
-        FileWriter writer = new FileWriter("out/outputXML.xml");
-        writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<company>\n" + comp.toXML() + "</company>");
-        writer.flush();
     }
 
     private static void writeToXML(Stream<Company> companyStream) throws IOException {
@@ -234,12 +165,6 @@ class Functional {
             }
         });
         writer.write("</company>");
-        writer.flush();
-    }
-
-    private static void writeToJSON(Company comp) throws IOException {
-        FileWriter writer = new FileWriter("out/outputJSON.json");
-        writer.write("{\n" + comp.toJSON() + "\n}");
         writer.flush();
     }
 

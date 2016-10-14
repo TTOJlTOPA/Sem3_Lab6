@@ -1,5 +1,7 @@
 package by.sem3.lab6;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Date;
 
 class Company {
@@ -126,12 +128,24 @@ class Company {
                 "</activity>\n\t<link>" + link + "</link>\n";
     }
 
+    public void writeToXML() throws IOException {
+        FileWriter writer = new FileWriter("out/outputXML.xml");
+        writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<company>\n" + toXML() + "</company>");
+        writer.flush();
+    }
+
     public String toJSON() {
         return "\t\"name\": \"" + name + "\",\n\t\"shortTitle\": \"" + shortTitle + "\",\n\t\"dateUpdate\": \"" +
                 dateUpdateToString() + "\",\n\t\"address\": \"" + address + "\",\n\t\"dateFoundation\": \"" +
                 dateFoundationToString() + "\",\n\t\"countEmployees\": \"" + countEmployees + "\",\n\t\"auditor\": \"" +
                 auditor + "\",\n\t\"phone\": \"" + phone + "\",\n\t\"email\": \"" + email + "\",\n\t\"branch\": \"" +
                 branch + "\",\n\t\"activity\": \"" + activity + "\",\n\t\"link\": \"" + link + "\"";
+    }
+
+    public void writeToJSON() throws IOException {
+        FileWriter writer = new FileWriter("out/outputJSON.json");
+        writer.write("{\n" + toJSON() + "\n}");
+        writer.flush();
     }
 
     public boolean isDateOfFoundationInInterval(String from, String to) {

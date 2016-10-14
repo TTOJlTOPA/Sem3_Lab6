@@ -25,7 +25,7 @@ class Logger {
 
     public void write(String log) throws LoggerException {
         try {
-            logger.write(new Date() + " " + log + "\n");
+            logger.write(new Date() + "\t" + log + "\n");
         } catch (IOException e) {
             throw new LoggerException(e);
         }
