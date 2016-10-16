@@ -12,7 +12,7 @@ public abstract class FormatReader {
         this.reader = new BufferedReader(new FileReader(path));
     }
 
-    protected String readLine() throws IOException{
+    protected String readLine() throws IOException {
         return reader.readLine();
     }
 

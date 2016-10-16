@@ -9,15 +9,10 @@ public class ReaderCSV extends FormatReader {
         super(path);
     }
 
-    public String[] nameOfColumns() throws IOException {
-        return super.readLine().split(";");
-    }
-
     @Override
     public List<String[]> read() throws IOException {
         List<String[]> list = new ArrayList();
         String line;
-        super.readLine();
         while ((line = super.readLine()) != null) {
             list.add(line.split(";"));
         }

@@ -1,7 +1,5 @@
 package by.sem3.lab6;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
@@ -17,14 +15,15 @@ class Functional {
             logger.write("Process started.");
             try {
                 logger.write("Start read the table.");
-                String[] columns = nameOfColumns("resources/input.csv");
-                Companies companies = new Companies("resources/input.csv");
+                ReaderCSV readerCSV = new ReaderCSV("resources/input.csv");
+                Companies companies = new Companies(readerCSV.read());
+                readerCSV.close();
                 logger.write("Read successful.");
-                companies.print(columns);
-                System.out.println("\n\n");
+                companies.print();
+                System.out.println("\n");
                 menu(companies);
                 logger.flush();
-            } catch (IOException e) {
+            } catch (IOException | CompaniesIsEmptyException e) {
                 System.out.println(e);
                 logger.write(e.toString());
                 logger.flush();
@@ -34,7 +33,7 @@ class Functional {
         }
     }
 
-    public static void menu(Companies companies) throws IOException, LoggerException {
+    public static void menu(Companies companies) throws IOException, LoggerException, CompaniesIsEmptyException {
         Scanner scan = new Scanner(System.in);
         int answer;
         System.out.print("\tChoose an action:\n1. Find company by short title.\n2. Filter companies by branch.\n" +
@@ -62,11 +61,13 @@ class Functional {
         }
     }
 
-    private static void case1(Companies companies) throws IOException, LoggerException {
+    private static void case1(Companies companies) throws IOException, LoggerException, CompaniesIsEmptyException {
         logger.write("Start search.");
         Company company = companies.findByShortTitle();
         if (company != null) {
             logger.write("Search successful.");
+            company.printColumnsNames();
+            company.print();
             logger.write("Start write to XML.");
             company.writeToXML();
             logger.write("Write to XML successful.");
@@ -79,12 +80,13 @@ class Functional {
         }
     }
 
-    private static void case2(Companies companies) throws IOException, LoggerException {
+    private static void case2(Companies companies) throws IOException, LoggerException, CompaniesIsEmptyException {
         Scanner scanner = new Scanner(System.in);
         String branch;
         System.out.print("Enter branch: ");
         branch = scanner.nextLine();
         logger.write("Start filter by branch.");
+        companies.printColumnsNames();
         companies.filterByBranch(branch).forEach(comp -> comp.print());
         logger.write("Filter successful.");
         logger.write("Start write to XML.");
@@ -95,12 +97,13 @@ class Functional {
         logger.write("Write to JSON successful.");
     }
 
-    private static void case3(Companies companies) throws IOException, LoggerException {
+    private static void case3(Companies companies) throws IOException, LoggerException, CompaniesIsEmptyException {
         Scanner scanner = new Scanner(System.in);
         String activity;
         System.out.print("Enter activity: ");
         activity = scanner.nextLine();
         logger.write("Start filter by activity.");
+        companies.printColumnsNames();
         companies.filterByActivity(activity).forEach(comp -> comp.print());
         logger.write("Filter successful.");
         logger.write("Start write to XML.");
@@ -111,7 +114,7 @@ class Functional {
         logger.write("Write to JSON successful.");
     }
 
-    private static void case4(Companies companies) throws IOException, LoggerException {
+    private static void case4(Companies companies) throws IOException, LoggerException, CompaniesIsEmptyException {
         Scanner scanner = new Scanner(System.in);
         String from;
         String to;
@@ -120,6 +123,7 @@ class Functional {
         System.out.print("To: ");
         to = scanner.nextLine();
         logger.write("Start filter by date of foundation.");
+        companies.printColumnsNames();
         companies.filterByDateOfFoundation(from, to).forEach(comp -> comp.print());
         logger.write("Filter successful.");
         logger.write("Start write to XML.");
@@ -130,7 +134,7 @@ class Functional {
         logger.write("Write to JSON successful.");
     }
 
-    private static void case5(Companies companies) throws IOException, LoggerException {
+    private static void case5(Companies companies) throws IOException, LoggerException, CompaniesIsEmptyException {
         Scanner scanner = new Scanner(System.in);
         int fromNum;
         int toNum;
@@ -139,6 +143,7 @@ class Functional {
         System.out.print("To: ");
         toNum = scanner.nextInt();
         logger.write("Start filter by count of employees.");
+        companies.printColumnsNames();
         companies.filterByCountOfEmployees(fromNum, toNum).forEach(comp -> comp.print());
         logger.write("Filter successful.");
         logger.write("Start write to XML.");
@@ -147,11 +152,6 @@ class Functional {
         logger.write("Start write to JSON.");
         writeToJSON(companies.filterByCountOfEmployees(fromNum, toNum));
         logger.write("Write to JSON successful.");
-    }
-
-    public static String[] nameOfColumns(String path) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(path));
-        return reader.readLine().split(";");
     }
 
     private static void writeToXML(Stream<Company> companyStream) throws IOException {

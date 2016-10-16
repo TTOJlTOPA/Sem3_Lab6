@@ -17,6 +17,7 @@ class Company {
     private String branch;
     private String activity;
     private String link;
+    private static String[] columnsNames;
 
     public Company() {
         this.name = "-";
@@ -31,6 +32,7 @@ class Company {
         this.branch = "-";
         this.activity = "-";
         this.link = "-";
+        this.columnsNames = null;
     }
 
     public Company(String[] param) {
@@ -68,6 +70,11 @@ class Company {
     public void print() {
         System.out.format("%9s%16s%19s%19s%28s%23d%12s%12s%20s%20s%15s%20s", name, shortTitle, dateUpdateToString(),
                 address, dateFoundationToString(), countEmployees, auditor, phone, email, branch, activity, link);
+        System.out.println();
+    }
+
+    public void printColumnsNames() {
+        System.out.format("%9s%16s%19s%19s%28s%23s%12s%12s%20s%20s%15s%20s", columnsNames);
         System.out.println();
     }
 
@@ -117,6 +124,14 @@ class Company {
 
     public String getLink() {
         return link;
+    }
+
+    public String[] getColumnsNames() {
+        return columnsNames;
+    }
+
+    public void setColumnsNames(String[] init) {
+        columnsNames = init;
     }
 
     public String toXML() {
