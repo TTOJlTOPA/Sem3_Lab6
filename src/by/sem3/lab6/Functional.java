@@ -22,11 +22,12 @@ class Functional {
                 companies.print();
                 System.out.println("\n");
                 menu(companies);
-                logger.flush();
+                logger.write("Program completed successfully.");
+                logger.close();
             } catch (IOException | CompaniesIsEmptyException e) {
                 System.out.println(e);
                 logger.write(e.toString());
-                logger.flush();
+                logger.close();
             }
         } catch (LoggerException e) {
             System.out.println(e);

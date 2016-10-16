@@ -20,18 +20,18 @@ class Company {
     private static String[] columnsNames;
 
     public Company() {
-        this.name = "-";
-        this.shortTitle = "-";
+        this.name = null;
+        this.shortTitle = null;
         this.dateUpdate = new Date(0, 0, 0);
-        this.address = "-";
+        this.address = null;
         this.dateFoundation = new Date(0, 0, 0);
         this.countEmployees = 0;
-        this.auditor = "-";
-        this.phone = "-";
-        this.email = "-";
-        this.branch = "-";
-        this.activity = "-";
-        this.link = "-";
+        this.auditor = null;
+        this.phone = null;
+        this.email = null;
+        this.branch = null;
+        this.activity = null;
+        this.link = null;
         this.columnsNames = null;
     }
 

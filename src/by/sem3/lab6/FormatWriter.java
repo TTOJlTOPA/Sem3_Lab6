@@ -6,7 +6,7 @@ import java.io.IOException;
 public abstract class FormatWriter {
     private FileWriter writer;
 
-    FormatWriter(String path) throws IOException {
+    protected FormatWriter(String path) throws IOException {
         this.writer = new FileWriter(path);
     }
 
