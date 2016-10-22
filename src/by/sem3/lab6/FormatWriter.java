@@ -10,7 +10,7 @@ public abstract class FormatWriter {
         this.writer = new FileWriter(path);
     }
 
-    protected abstract void write() throws IOException;
+    protected abstract void write(Format format) throws IOException;
 
     protected void flush() throws IOException {
         writer.flush();

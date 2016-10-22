@@ -19,9 +19,19 @@ public class FormatXML extends Format {
 
     @Override
     public boolean isCorrect(String str) {
-        Pattern pattern = Pattern.compile("");
-        Matcher matcher = pattern.matcher(str);
-        return matcher.matches();
+        String[] lines = str.split("\\n");
+        Pattern pattern = Pattern.compile("(<\\?xml version=\"1[.][01]\"" +
+                "( encoding=\"(UTF-(8|16)|windows-1251)\")?( standalone=\"(yes|no)\")?\\?>)" +
+                "|(\\s*((<\\w+>)|([№\\w\\p{Punct}&&[^\\\\\"&<>]]+[ \t]*[№\\w\\p{Punct}&&[^\\\\\"&<>]]*)" +
+                "|(</\\w+>))+)");
+        Matcher matcher;
+        for (String item : lines) {
+            matcher = pattern.matcher(item);
+            if (!matcher.matches()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

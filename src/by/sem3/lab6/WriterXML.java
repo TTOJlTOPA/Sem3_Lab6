@@ -7,8 +7,10 @@ public class WriterXML extends FormatWriter {
         super(path);
     }
 
+
+
     @Override
-    public void write() throws IOException {
+    public void write(Format xml) throws IOException {
 
     }
 

@@ -19,9 +19,17 @@ public class FormatJSON extends Format {
 
     @Override
     public boolean isCorrect(String str) {
-        Pattern pattern = Pattern.compile("");
-        Matcher matcher = pattern.matcher(str);
-        return matcher.matches();
+        String[] lines = str.split("\\n");
+        Pattern pattern = Pattern.compile("(\\s*((\\{|\\})" +
+                "|(\"\\w+\": (\\d+|[\\[\\]]|(\"[№\\w\\p{Punct}&&[^\\\\\"]]+\")|(true)|(false)),?)))");
+        Matcher matcher;
+        for (String item : lines) {
+            matcher = pattern.matcher(item);
+            if (!matcher.matches()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

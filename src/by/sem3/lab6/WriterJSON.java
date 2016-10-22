@@ -8,7 +8,7 @@ public class WriterJSON extends FormatWriter {
     }
 
     @Override
-    public void write() throws IOException {
+    public void write(Format json) throws IOException {
 
     }
 
