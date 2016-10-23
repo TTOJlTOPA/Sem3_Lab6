@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
-public class Companies {
+class Companies {
     private List<Company> companies;
 
     public Companies(List<String[]> list) throws CompaniesIsEmptyException {
@@ -22,9 +22,7 @@ public class Companies {
     public void print() throws CompaniesIsEmptyException {
         if (!isEmpty()) {
             printColumnsNames();
-            for (Company iter : companies) {
-                iter.print();
-            }
+            companies.forEach(Company::print);
         } else {
             throw new CompaniesIsEmptyException();
         }
@@ -113,5 +111,63 @@ public class Companies {
 
     public boolean isEmpty() {
         return companies.isEmpty();
+    }
+
+    public FormatXML toXML() throws IncorrectFormatException {
+        FormatXML xml = new FormatXML();
+        xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<companies>\n");
+        for (Company item : companies) {
+            xml.append(item.toXML(true));
+        }
+        xml.append("</companies>");
+        return xml;
+    }
+
+    public FormatXML toXML(Stream<Company> filter) throws IncorrectFormatException {
+        FormatXML xml = new FormatXML();
+        xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<companies>\n");
+        filter.forEach(company -> {
+            try {
+                xml.append(company.toXML(true));
+            } catch (IncorrectFormatException e) {
+                e.printStackTrace();
+            }
+        });
+        xml.append("</companies>");
+        return xml;
+    }
+
+    public FormatJSON toJSON() throws IncorrectFormatException {
+        FormatJSON json = new FormatJSON();
+        Iterator<Company> iter = companies.iterator();
+        Company tmp;
+        json.append("{\n\t\"companies\": [");
+        while (iter.hasNext()) {
+            tmp = iter.next();
+            if (iter.hasNext()) {
+                json.append(tmp.toJSON(true, false));
+            } else {
+                json.append(tmp.toJSON(true, true));
+            }
+        }
+        json.append("\t]\n}");
+        return json;
+    }
+
+    public FormatJSON toJSON(Stream<Company> filter) throws IncorrectFormatException {
+        FormatJSON json = new FormatJSON();
+        Iterator<Company> iter = filter.iterator();
+        Company tmp;
+        json.append("{\n\t\"companies\": [");
+        while (iter.hasNext()) {
+            tmp = iter.next();
+            if (iter.hasNext()) {
+                json.append(tmp.toJSON(true, false));
+            } else {
+                json.append(tmp.toJSON(true, true));
+            }
+        }
+        json.append("\n\t]\n}");
+        return json;
     }
 }

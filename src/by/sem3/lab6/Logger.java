@@ -4,7 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 
-class Logger {
+public class Logger {
     private FileWriter logger;
 
     public Logger() throws LoggerException {

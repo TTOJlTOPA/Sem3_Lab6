@@ -8,6 +8,10 @@ public class FormatJSON extends Format {
         super();
     }
 
+    public void append(FormatJSON json) throws IncorrectFormatException {
+        super.append(json.getFormat());
+    }
+
     @Override
     public void append(String str) throws IncorrectFormatException {
         if (isCorrect(str)) {
@@ -20,20 +24,17 @@ public class FormatJSON extends Format {
     @Override
     public boolean isCorrect(String str) {
         String[] lines = str.split("\\n");
-        Pattern pattern = Pattern.compile("(\\s*((\\{|\\})" +
-                "|(\"\\w+\": (\\d+|[\\[\\]]|(\"[№\\w\\p{Punct}&&[^\\\\\"]]+\")|(true)|(false)),?)))");
+        Pattern pattern = Pattern.compile("(\\s*((\\{|\\})|(\\t+[\\[\\]])" +
+                "|(\"\\w+\": (\\d+|\\[|(\"[№\\w\\p{Punct}&&[^\\\\\"]]+\")|(true)|(false)))),?)");
         Matcher matcher;
         for (String item : lines) {
-            matcher = pattern.matcher(item);
-            if (!matcher.matches()) {
-                return false;
+            if (!item.isEmpty()) {
+                matcher = pattern.matcher(item);
+                if (!matcher.matches()) {
+                    return false;
+                }
             }
         }
         return true;
-    }
-
-    @Override
-    public String getFormat() {
-        return super.getFormat();
     }
 }

@@ -7,20 +7,7 @@ public class WriterXML extends FormatWriter {
         super(path);
     }
 
-
-
-    @Override
-    public void write(Format xml) throws IOException {
-
-    }
-
-    @Override
-    public void flush() throws IOException {
-        super.flush();
-    }
-
-    @Override
-    public void close() throws IOException {
-        super.close();
+    public void write(FormatXML xml) throws IOException {
+        super.write(xml);
     }
 }

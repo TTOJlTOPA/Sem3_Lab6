@@ -7,18 +7,7 @@ public class WriterJSON extends FormatWriter {
         super(path);
     }
 
-    @Override
-    public void write(Format json) throws IOException {
-
-    }
-
-    @Override
-    public void flush() throws IOException {
-        super.flush();
-    }
-
-    @Override
-    public void close() throws IOException {
-        super.close();
+    public void write(FormatJSON json) throws IOException {
+        super.write(json);
     }
 }

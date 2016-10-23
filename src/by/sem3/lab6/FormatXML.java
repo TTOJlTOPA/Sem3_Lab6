@@ -8,6 +8,10 @@ public class FormatXML extends Format {
         super();
     }
 
+    public void append(FormatXML xml) throws IncorrectFormatException {
+        super.append(xml.getFormat());
+    }
+
     @Override
     public void append(String str) throws IncorrectFormatException {
         if (isCorrect(str)) {
@@ -26,16 +30,13 @@ public class FormatXML extends Format {
                 "|(</\\w+>))+)");
         Matcher matcher;
         for (String item : lines) {
-            matcher = pattern.matcher(item);
-            if (!matcher.matches()) {
-                return false;
+            if (!item.isEmpty()) {
+                matcher = pattern.matcher(item);
+                if (!matcher.matches()) {
+                    return false;
+                }
             }
         }
         return true;
-    }
-
-    @Override
-    public String getFormat() {
-        return super.getFormat();
     }
 }

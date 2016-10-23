@@ -1,7 +1,5 @@
 package by.sem3.lab6;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Date;
 
 class Company {
@@ -32,7 +30,7 @@ class Company {
         this.branch = null;
         this.activity = null;
         this.link = null;
-        this.columnsNames = null;
+        columnsNames = null;
     }
 
     public Company(String[] param) {
@@ -82,100 +80,172 @@ class Company {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getShortTitle() {
         return shortTitle;
+    }
+
+    public void setShortTitle(String shortTitle) {
+        this.shortTitle = shortTitle;
     }
 
     public Date getDateUpdate() {
         return dateUpdate;
     }
 
+    public void setDateUpdate(Date dateUpdate) {
+        this.dateUpdate = dateUpdate;
+    }
+
     public String getAddress() {
         return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Date getDateFoundation() {
         return dateFoundation;
     }
 
+    public void setDateFoundation(Date dateFoundation) {
+        this.dateFoundation = dateFoundation;
+    }
+
     public int getCountEmployees() {
         return countEmployees;
+    }
+
+    public void setCountEmployees(int countEmployees) {
+        this.countEmployees = countEmployees;
     }
 
     public String getAuditor() {
         return auditor;
     }
 
+    public void setAuditor(String auditor) {
+        this.auditor = auditor;
+    }
+
     public String getPhone() {
         return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getEmail() {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getBranch() {
         return branch;
+    }
+
+    public void setBranch(String branch) {
+        this.branch = branch;
     }
 
     public String getActivity() {
         return activity;
     }
 
+    public void setActivity(String activity) {
+        this.activity = activity;
+    }
+
     public String getLink() {
         return link;
     }
 
-    public String[] getColumnsNames() {
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public static String[] getColumnsNames() {
         return columnsNames;
     }
 
-    public void setColumnsNames(String[] init) {
-        columnsNames = init;
+    public static void setColumnsNames(String[] columnsNames) {
+        Company.columnsNames = columnsNames;
     }
 
-    public String toXML() {
-        return "\t<name>" + name + "</name>\n\t<shorttitle>" + shortTitle + "</shorttitle>\n\t<dateupdate>" +
+    public FormatXML toXML() throws IncorrectFormatException {
+        FormatXML xml = new FormatXML();
+        xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<company>\n\t<name>" + name +
+                "</name>\n\t<shorttitle>" + shortTitle + "</shorttitle>\n\t<dateupdate>" +
                 dateUpdateToString() + "</dateupdate>\n\t<address>" + address + "</address>\n\t<datefoundation>" +
                 dateFoundationToString() + "</datefoundation>\n\t<countemployees>" + countEmployees +
                 "</countemployees>\n\t<auditor>" + auditor + "</auditor>\n\t<phone>" + phone + "</phone>\n\t<email>" +
                 email + "</email>\n\t<branch>" + branch + "</branch>\n\t<activity>" + activity +
-                "</activity>\n\t<link>" + link + "</link>\n";
+                "</activity>\n\t<link>" + link + "</link>\n</company>");
+        return xml;
     }
 
-    public void writeToXML() throws IOException {
-        FileWriter writer = new FileWriter("out/outputXML.xml");
-        writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<company>\n" + toXML() + "</company>");
-        writer.flush();
+    public FormatXML toXML(boolean isInArray) throws IncorrectFormatException {
+        FormatXML xml = new FormatXML();
+        if (isInArray) {
+            xml.append("\t<company>\n\t\t<name>" + name + "</name>\n\t\t<shorttitle>" + shortTitle +
+                    "</shorttitle>\n\t\t<dateupdate>" + dateUpdateToString() + "</dateupdate>\n\t\t<address>" +
+                    address + "</address>\n\t\t<datefoundation>" + dateFoundationToString() +
+                    "</datefoundation>\n\t\t<countemployees>" + countEmployees + "</countemployees>\n\t\t<auditor>" +
+                    auditor + "</auditor>\n\t\t<phone>" + phone + "</phone>\n\t\t<email>" + email +
+                    "</email>\n\t\t<branch>" + branch + "</branch>\n\t\t<activity>" +
+                    activity + "</activity>\n\t\t<link>" + link + "</link>\n\t</company>\n");
+        } else {
+            xml = toXML();
+        }
+        return xml;
     }
 
-    public String toJSON() {
-        return "\t\"name\": \"" + name + "\",\n\t\"shortTitle\": \"" + shortTitle + "\",\n\t\"dateUpdate\": \"" +
+    public FormatJSON toJSON() throws IncorrectFormatException {
+        FormatJSON json = new FormatJSON();
+        json.append("{\n\t\"name\": \"" + name + "\",\n\t\"shortTitle\": \"" + shortTitle + "\",\n\t\"dateUpdate\": \"" +
                 dateUpdateToString() + "\",\n\t\"address\": \"" + address + "\",\n\t\"dateFoundation\": \"" +
                 dateFoundationToString() + "\",\n\t\"countEmployees\": \"" + countEmployees + "\",\n\t\"auditor\": \"" +
                 auditor + "\",\n\t\"phone\": \"" + phone + "\",\n\t\"email\": \"" + email + "\",\n\t\"branch\": \"" +
-                branch + "\",\n\t\"activity\": \"" + activity + "\",\n\t\"link\": \"" + link + "\"";
+                branch + "\",\n\t\"activity\": \"" + activity + "\",\n\t\"link\": \"" + link + "\"\n}");
+        return json;
     }
 
-    public void writeToJSON() throws IOException {
-        FileWriter writer = new FileWriter("out/outputJSON.json");
-        writer.write("{\n" + toJSON() + "\n}");
-        writer.flush();
+    public FormatJSON toJSON(boolean isInArray, boolean isLast) throws IncorrectFormatException {
+        FormatJSON json = new FormatJSON();
+        String tmp = "\n\t\t{\n\t\t\t\"name\": \"" + name + "\",\n\t\t\t\"shortTitle\": \"" + shortTitle +
+                "\",\n\t\t\t\"dateUpdate\": \"" + dateUpdateToString() + "\",\n\t\t\t\"address\": \"" + address +
+                "\",\n\t\t\t\"dateFoundation\": \"" + dateFoundationToString() +
+                "\",\n\t\t\t\"countEmployees\": \"" + countEmployees + "\",\n\t\t\t\"auditor\": \"" + auditor +
+                "\",\n\t\t\t\"phone\": \"" + phone + "\",\n\t\t\t\"email\": \"" + email +
+                "\",\n\t\t\t\"branch\": \"" + branch + "\",\n\t\t\t\"activity\": \"" + activity +
+                "\",\n\t\t\t\"link\": \"" + link + "\"\n\t\t}";
+        if (isInArray) {
+            if (isLast) {
+                json.append(tmp);
+            } else {
+                json.append(tmp + ",");
+            }
+        } else {
+            json = toJSON();
+        }
+        return json;
     }
 
     public boolean isDateOfFoundationInInterval(String from, String to) {
         Date fromDate = stringToDate(from);
         Date toDate = stringToDate(to);
-        if (dateFoundation.compareTo(fromDate) >= 0 && dateFoundation.compareTo(toDate) <= 0) {
-            return true;
-        }
-        return false;
+        return dateFoundation.compareTo(fromDate) >= 0 && dateFoundation.compareTo(toDate) <= 0;
     }
 
     public boolean isCountOfEmployeesInInterval(int from, int to) {
-        if (countEmployees >= from && countEmployees <= to) {
-            return true;
-        }
-        return false;
+        return countEmployees >= from && countEmployees <= to;
     }
 }
