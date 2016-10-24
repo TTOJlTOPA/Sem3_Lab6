@@ -26,8 +26,7 @@ public class FormatXML extends Format {
         String[] lines = str.split("\\n");
         Pattern pattern = Pattern.compile("(<\\?xml version=\"1[.][01]\"" +
                 "( encoding=\"(UTF-(8|16)|windows-1251)\")?( standalone=\"(yes|no)\")?\\?>)" +
-                "|(\\s*((<\\w+>)|([№\\w\\p{Punct}&&[^\\\\\"&<>]]+[ \t]*[№\\w\\p{Punct}&&[^\\\\\"&<>]]*)" +
-                "|(</\\w+>))+)");
+                "|(\\s*((</?\\w+>)|([№\\w\\p{Punct}&&[^\\\\\"&<>]]+[ \t]*[№\\w\\p{Punct}&&[^\\\\\"&<>]]*))+)");
         Matcher matcher;
         for (String item : lines) {
             if (!item.isEmpty()) {
