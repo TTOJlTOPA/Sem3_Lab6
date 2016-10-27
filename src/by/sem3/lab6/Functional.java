@@ -8,10 +8,9 @@ class Functional {
     private static WriterXML xmlWriter;
     private static WriterJSON jsonWriter;
 
-
     public static void run() {
         try {
-            logger = new Logger();
+            logger = new Logger("out/logfile.txt");
             logger.write("Process started.");
             try {
                 logger.write("Start read the table.");
@@ -39,8 +38,8 @@ class Functional {
 
     private static void menu(Companies companies) throws Exception {
         Scanner scan = new Scanner(System.in);
-        xmlWriter = new WriterXML("out/outputXML.xml");
-        jsonWriter = new WriterJSON("out/outputJSON.json");
+        xmlWriter = new WriterXML("output/outputXML.xml");
+        jsonWriter = new WriterJSON("output/outputJSON.json");
         int answer;
         System.out.print("\tChoose an action:\n1. Find company by short title.\n2. Filter companies by branch.\n" +
                 "3. Filter companies by activity.\n4. Filter companies by date of foundation.\n" +

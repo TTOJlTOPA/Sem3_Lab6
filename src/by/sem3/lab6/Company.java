@@ -195,13 +195,14 @@ class Company {
     public FormatXML toXML(boolean isInArray) throws IncorrectFormatException {
         FormatXML xml = new FormatXML();
         if (isInArray) {
-            xml.append("\t<company>\n\t\t<name>" + name + "</name>\n\t\t<shorttitle>" + shortTitle +
-                    "</shorttitle>\n\t\t<dateupdate>" + dateUpdateToString() + "</dateupdate>\n\t\t<address>" +
-                    address + "</address>\n\t\t<datefoundation>" + dateFoundationToString() +
-                    "</datefoundation>\n\t\t<countemployees>" + countEmployees + "</countemployees>\n\t\t<auditor>" +
-                    auditor + "</auditor>\n\t\t<phone>" + phone + "</phone>\n\t\t<email>" + email +
-                    "</email>\n\t\t<branch>" + branch + "</branch>\n\t\t<activity>" +
-                    activity + "</activity>\n\t\t<link>" + link + "</link>\n\t</company>\n");
+            xml.append("\t\t<company>\n\t\t\t<name>" + name + "</name>\n\t\t\t<shorttitle>" + shortTitle +
+                    "</shorttitle>\n\t\t\t<dateupdate>" + dateUpdateToString() + "</dateupdate>\n\t\t\t<address>" +
+                    address + "</address>\n\t\t\t<datefoundation>" + dateFoundationToString() +
+                    "</datefoundation>\n\t\t\t<countemployees>" + countEmployees +
+                    "</countemployees>\n\t\t\t<auditor>" + auditor + "</auditor>\n\t\t\t<phone>" + phone +
+                    "</phone>\n\t\t\t<email>" + email + "</email>\n\t\t\t<branch>" + branch +
+                    "</branch>\n\t\t\t<activity>" + activity + "</activity>\n\t\t\t<link>" + link +
+                    "</link>\n\t\t</company>\n");
         } else {
             xml = toXML();
         }
@@ -212,7 +213,7 @@ class Company {
         FormatJSON json = new FormatJSON();
         json.append("{\n\t\"name\": \"" + name + "\",\n\t\"shortTitle\": \"" + shortTitle + "\",\n\t\"dateUpdate\": \"" +
                 dateUpdateToString() + "\",\n\t\"address\": \"" + address + "\",\n\t\"dateFoundation\": \"" +
-                dateFoundationToString() + "\",\n\t\"countEmployees\": \"" + countEmployees + "\",\n\t\"auditor\": \"" +
+                dateFoundationToString() + "\",\n\t\"countEmployees\": " + countEmployees + ",\n\t\"auditor\": \"" +
                 auditor + "\",\n\t\"phone\": \"" + phone + "\",\n\t\"email\": \"" + email + "\",\n\t\"branch\": \"" +
                 branch + "\",\n\t\"activity\": \"" + activity + "\",\n\t\"link\": \"" + link + "\"\n}");
         return json;
@@ -223,7 +224,7 @@ class Company {
         String tmp = "\n\t\t{\n\t\t\t\"name\": \"" + name + "\",\n\t\t\t\"shortTitle\": \"" + shortTitle +
                 "\",\n\t\t\t\"dateUpdate\": \"" + dateUpdateToString() + "\",\n\t\t\t\"address\": \"" + address +
                 "\",\n\t\t\t\"dateFoundation\": \"" + dateFoundationToString() +
-                "\",\n\t\t\t\"countEmployees\": \"" + countEmployees + "\",\n\t\t\t\"auditor\": \"" + auditor +
+                "\",\n\t\t\t\"countEmployees\": " + countEmployees + ",\n\t\t\t\"auditor\": \"" + auditor +
                 "\",\n\t\t\t\"phone\": \"" + phone + "\",\n\t\t\t\"email\": \"" + email +
                 "\",\n\t\t\t\"branch\": \"" + branch + "\",\n\t\t\t\"activity\": \"" + activity +
                 "\",\n\t\t\t\"link\": \"" + link + "\"\n\t\t}";

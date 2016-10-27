@@ -115,17 +115,17 @@ class Companies {
 
     public FormatXML toXML() throws IncorrectFormatException {
         FormatXML xml = new FormatXML();
-        xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<companies>\n");
+        xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<companies>\n\t<companiesList>\n");
         for (Company item : companies) {
             xml.append(item.toXML(true));
         }
-        xml.append("</companies>");
+        xml.append("\t</companiesList>\n</companies>");
         return xml;
     }
 
     public FormatXML toXML(Stream<Company> filter) throws IncorrectFormatException {
         FormatXML xml = new FormatXML();
-        xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<companies>\n");
+        xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<companies>\n\t<companiesList>\n");
         filter.forEach(company -> {
             try {
                 xml.append(company.toXML(true));
@@ -133,7 +133,7 @@ class Companies {
                 e.printStackTrace();
             }
         });
-        xml.append("</companies>");
+        xml.append("\t</companiesList>\n</companies>");
         return xml;
     }
 

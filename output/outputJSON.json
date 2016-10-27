@@ -1,0 +1,46 @@
+{
+	"companies": [
+		{
+			"name": "name2",
+			"shortTitle": "stitle2",
+			"dateUpdate": "24.9.2016",
+			"address": "address2",
+			"dateFoundation": "27.4.1997",
+			"countEmployees": 1488,
+			"auditor": "auditor2",
+			"phone": "222-22-22",
+			"email": "MblLo2@gmail.com",
+			"branch": "branch2",
+			"activity": "activity2",
+			"link": "link2.net"
+		},
+		{
+			"name": "name3",
+			"shortTitle": "stitle3",
+			"dateUpdate": "11.9.2016",
+			"address": "address3",
+			"dateFoundation": "30.8.2004",
+			"countEmployees": 1109,
+			"auditor": "auditor3",
+			"phone": "333-33-33",
+			"email": "MblLo3@gmail.com",
+			"branch": "branch1",
+			"activity": "activity3",
+			"link": "link3.net"
+		},
+		{
+			"name": "name5",
+			"shortTitle": "stitle5",
+			"dateUpdate": "26.9.2016",
+			"address": "address5",
+			"dateFoundation": "13.12.2003",
+			"countEmployees": 1231,
+			"auditor": "auditor5",
+			"phone": "555-55-55",
+			"email": "MblLo5@gmail.com",
+			"branch": "branch3",
+			"activity": "activity2",
+			"link": "link5.net"
+		}
+	]
+}
