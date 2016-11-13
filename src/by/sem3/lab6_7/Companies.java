@@ -1,4 +1,4 @@
-package by.sem3.lab6;
+package by.sem3.lab6_7;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,14 +7,14 @@ import java.util.Scanner;
 import java.util.stream.Stream;
 
 class Companies {
-    private List<Company> companies;
+    private final List<Company> companies;
 
     public Companies(List<String[]> list) throws CompaniesIsEmptyException {
         this.companies = new ArrayList<>();
-        Iterator<String[]> iter = list.iterator();
-        iter.next();
-        while (iter.hasNext()) {
-            companies.add(new Company(iter.next()));
+        Iterator<String[]> iterator = list.iterator();
+        iterator.next();
+        while (iterator.hasNext()) {
+            companies.add(new Company(iterator.next()));
         }
         setColumnsNames(list.get(0));
     }
@@ -29,7 +29,7 @@ class Companies {
     }
 
     public void printColumnsNames() throws CompaniesIsEmptyException {
-        System.out.format("%9s%16s%19s%19s%28s%23s%12s%12s%20s%20s%15s%20s", getColumnsNames());
+        System.out.format("%-9s%-16s%-19s%-19s%-28s%-23s%-12s%-12s%-20s%-20s%-15s%-20s", getColumnsNames());
         System.out.println();
     }
 
@@ -39,9 +39,9 @@ class Companies {
             String title;
             System.out.print("Enter short title: ");
             title = scan.nextLine();
-            for (Company iter : companies) {
-                if (title.equalsIgnoreCase(iter.getShortTitle())) {
-                    return iter;
+            for (Company iterator : companies) {
+                if (title.equalsIgnoreCase(iterator.getShortTitle())) {
+                    return iterator;
                 }
             }
             System.out.println("Not found.");
@@ -95,7 +95,7 @@ class Companies {
 
     public String[] getColumnsNames() throws CompaniesIsEmptyException {
         if (!isEmpty()) {
-            return companies.get(0).getColumnsNames();
+            return Company.getColumnsNames();
         } else {
             throw new CompaniesIsEmptyException();
         }
@@ -103,10 +103,18 @@ class Companies {
 
     public void setColumnsNames(String[] columnsNames) throws CompaniesIsEmptyException {
         if (!isEmpty()) {
-            companies.get(0).setColumnsNames(columnsNames);
+            Company.setColumnsNames(columnsNames);
         } else {
             throw new CompaniesIsEmptyException();
         }
+    }
+
+    public Iterator<Company> getIterator () {
+        return companies.iterator();
+    }
+
+    public Stream<Company> getStream() {
+        return companies.stream();
     }
 
     public boolean isEmpty() {
@@ -139,12 +147,12 @@ class Companies {
 
     public FormatJSON toJSON() throws IncorrectFormatException {
         FormatJSON json = new FormatJSON();
-        Iterator<Company> iter = companies.iterator();
+        Iterator<Company> iterator = companies.iterator();
         Company tmp;
         json.append("{\n\t\"companies\": [");
-        while (iter.hasNext()) {
-            tmp = iter.next();
-            if (iter.hasNext()) {
+        while (iterator.hasNext()) {
+            tmp = iterator.next();
+            if (iterator.hasNext()) {
                 json.append(tmp.toJSON(true, false));
             } else {
                 json.append(tmp.toJSON(true, true));
@@ -156,12 +164,12 @@ class Companies {
 
     public FormatJSON toJSON(Stream<Company> filter) throws IncorrectFormatException {
         FormatJSON json = new FormatJSON();
-        Iterator<Company> iter = filter.iterator();
+        Iterator<Company> iterator = filter.iterator();
         Company tmp;
         json.append("{\n\t\"companies\": [");
-        while (iter.hasNext()) {
-            tmp = iter.next();
-            if (iter.hasNext()) {
+        while (iterator.hasNext()) {
+            tmp = iterator.next();
+            if (iterator.hasNext()) {
                 json.append(tmp.toJSON(true, false));
             } else {
                 json.append(tmp.toJSON(true, true));

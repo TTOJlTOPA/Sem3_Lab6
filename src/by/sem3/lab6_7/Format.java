@@ -1,7 +1,7 @@
-package by.sem3.lab6;
+package by.sem3.lab6_7;
 
 public abstract class Format {
-    StringBuilder format;
+    final StringBuilder format;
 
     protected Format() {
         this.format = new StringBuilder();

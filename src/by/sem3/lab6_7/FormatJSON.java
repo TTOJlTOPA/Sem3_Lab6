@@ -1,4 +1,4 @@
-package by.sem3.lab6;
+package by.sem3.lab6_7;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,7 +25,7 @@ public class FormatJSON extends Format {
     public boolean isCorrect(String str) {
         String[] lines = str.split("\\n");
         Pattern pattern = Pattern.compile("(\\s*((\\{|\\})|(\\t+[\\[\\]])" +
-                "|(\"\\w+\": (\\d+|\\[|(\"[№\\w\\p{Punct}&&[^\\\\\"]]+\")|(true)|(false)))),?)");
+                "|(\"\\w+\": (\\d+|\\[|(\"[№\\w\\p{Punct}&&[^\\\\\"]]+\")|(true)|(false)))),?)|\\t+|,");
         Matcher matcher;
         for (String item : lines) {
             if (!item.isEmpty()) {

@@ -1,4 +1,4 @@
-package by.sem3.lab6;
+package by.sem3.lab6_7;
 
 import java.util.Date;
 
@@ -66,18 +66,27 @@ class Company {
     }
 
     public void print() {
-        System.out.format("%9s%16s%19s%19s%28s%23d%12s%12s%20s%20s%15s%20s", name, shortTitle, dateUpdateToString(),
-                address, dateFoundationToString(), countEmployees, auditor, phone, email, branch, activity, link);
+        System.out.format("%-9s%-16s%-19s%-19s%-28s%-23d%-12s%-12s%-20s%-20s%-15s%-20s",
+                name, shortTitle, dateUpdateToString(), address, dateFoundationToString(), countEmployees,
+                auditor, phone, email, branch, activity, link);
         System.out.println();
     }
 
     public void printColumnsNames() {
-        System.out.format("%9s%16s%19s%19s%28s%23s%12s%12s%20s%20s%15s%20s", columnsNames);
+        System.out.format("%-9s%-16s%-19s%-19s%-28s%-23s%-12s%-12s%-20s%-20s%-15s%-20s", columnsNames);
         System.out.println();
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getNameAsXML() {
+        return "<name>" + name + "</name>";
+    }
+
+    public String getNameAsJSON() {
+        return "\"name\": \"" + name + "\"";
     }
 
     public void setName(String name) {
@@ -88,12 +97,32 @@ class Company {
         return shortTitle;
     }
 
+    public String getShortTitleAsXML() {
+        return "<shorttitle>" + shortTitle + "</shorttitle>";
+    }
+
+    public String getShortTitleAsJSON() {
+        return "\"shortTitle\": \"" + shortTitle + "\"";
+    }
+
     public void setShortTitle(String shortTitle) {
         this.shortTitle = shortTitle;
     }
 
     public Date getDateUpdate() {
         return dateUpdate;
+    }
+
+    public String getDateUpdateAsString() {
+        return dateUpdateToString();
+    }
+
+    public String getDateUpdateAsXML() {
+        return "<dateupdate>" + dateUpdateToString() + "</dateupdate>";
+    }
+
+    public String getDateUpdateAsJSON() {
+        return "\"dateUpdate\": \"" + dateUpdateToString() + "\"";
     }
 
     public void setDateUpdate(Date dateUpdate) {
@@ -104,12 +133,32 @@ class Company {
         return address;
     }
 
+    public String getAddressAsXML() {
+        return "<address>" + getAddress() + "</address>";
+    }
+
+    public String getAddressAsJSON() {
+        return "\"address\": \"" + getAddress() + "\"";
+    }
+
     public void setAddress(String address) {
         this.address = address;
     }
 
     public Date getDateFoundation() {
         return dateFoundation;
+    }
+
+    public String getDateFoundationAsString() {
+        return dateFoundationToString();
+    }
+
+    public String getDateFoundationAsXML() {
+        return "<datefoundation>" + dateFoundationToString() + "</datefoundation>";
+    }
+
+    public String getDateFoundationAsJSON() {
+        return "\"dateFoundation\": \"" + dateFoundationToString() + "\"";
     }
 
     public void setDateFoundation(Date dateFoundation) {
@@ -120,12 +169,28 @@ class Company {
         return countEmployees;
     }
 
+    public String getCountEmployeesAsXML() {
+        return "<countemployees>" + countEmployees + "</countemployees>";
+    }
+
+    public String getCountEmployeesAsJSON() {
+        return "\"countEmployees\": " + getCountEmployees();
+    }
+
     public void setCountEmployees(int countEmployees) {
         this.countEmployees = countEmployees;
     }
 
     public String getAuditor() {
         return auditor;
+    }
+
+    public String getAuditorAsXML() {
+        return "<auditor>" + auditor + "</auditor>";
+    }
+
+    public String getAuditorAsJSON() {
+        return "\"auditor\": \"" + auditor + "\"";
     }
 
     public void setAuditor(String auditor) {
@@ -136,12 +201,28 @@ class Company {
         return phone;
     }
 
+    public String getPhoneAsXML() {
+        return "<phone>" + phone + "</phone>";
+    }
+
+    public String getPhoneAsJSON() {
+        return "\"phone\": \"" + phone + "\"";
+    }
+
     public void setPhone(String phone) {
         this.phone = phone;
     }
 
     public String getEmail() {
         return email;
+    }
+
+    public String getEmailAsXML() {
+        return "<email>" + email + "</email>";
+    }
+
+    public String getEmailAsJSON() {
+        return "\"email\": \"" + email + "\"";
     }
 
     public void setEmail(String email) {
@@ -152,6 +233,14 @@ class Company {
         return branch;
     }
 
+    public String getBranchAsXML() {
+        return "<branch>" + branch + "</branch>";
+    }
+
+    public String getBranchAsJSON() {
+        return "\"branch\": \"" + branch + "\"";
+    }
+
     public void setBranch(String branch) {
         this.branch = branch;
     }
@@ -160,12 +249,28 @@ class Company {
         return activity;
     }
 
+    public String getActivityAsXML() {
+        return "<activity>" + activity + "</activity>";
+    }
+
+    public String getActivityAsJSON() {
+        return "\"activity\": \"" + activity + "\"";
+    }
+
     public void setActivity(String activity) {
         this.activity = activity;
     }
 
     public String getLink() {
         return link;
+    }
+
+    public String getLinkAsXML() {
+        return "<link>" + link + "</link>";
+    }
+
+    public String getLinkAsJSON() {
+        return "\"link\": \"" + link + "\"";
     }
 
     public void setLink(String link) {

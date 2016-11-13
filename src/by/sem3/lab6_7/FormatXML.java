@@ -1,4 +1,4 @@
-package by.sem3.lab6;
+package by.sem3.lab6_7;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,7 +26,7 @@ public class FormatXML extends Format {
         String[] lines = str.split("\\n");
         Pattern pattern = Pattern.compile("(<\\?xml version=\"1[.][01]\"" +
                 "( encoding=\"(UTF-(8|16)|windows-1251)\")?( standalone=\"(yes|no)\")?\\?>)" +
-                "|(\\s*((</?\\w+>)|([№\\w\\p{Punct}&&[^\\\\\"&<>]]+[ \t]*[№\\w\\p{Punct}&&[^\\\\\"&<>]]*))+)");
+                "|(\\s*((</?\\w+>)|([№\\w\\p{Punct}&&[^\\\\\"&<>]]+[ \t]*[№\\w\\p{Punct}&&[^\\\\\"&<>]]*))+)|\\t+");
         Matcher matcher;
         for (String item : lines) {
             if (!item.isEmpty()) {

@@ -1,4 +1,4 @@
-package by.sem3.lab6;
+package by.sem3.lab6_7;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

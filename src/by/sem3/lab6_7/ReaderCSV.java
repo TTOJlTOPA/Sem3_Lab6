@@ -1,4 +1,4 @@
-package by.sem3.lab6;
+package by.sem3.lab6_7;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ public class ReaderCSV extends FormatReader {
 
     @Override
     public List<String[]> read() throws IOException {
-        List<String[]> list = new ArrayList();
+        List<String[]> list = new ArrayList<>();
         String line;
         while ((line = super.readLine()) != null) {
             list.add(line.split(";"));
