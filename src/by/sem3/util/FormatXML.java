@@ -1,4 +1,4 @@
-package by.sem3.lab6_7;
+package by.sem3.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,6 +21,21 @@ public class FormatXML extends Format {
         }
     }
 
+    public void appendWithTag(String tag, String str) throws IncorrectFormatException {
+        if(isCorrect(str) && isTagCorrect(tag)){
+            super.append("<");
+            super.append(tag);
+            super.append(">");
+            super.append(str);
+            super.append("</");
+            super.append(tag);
+            super.append(">");
+            super.append("\n");
+        } else {
+            throw new IncorrectFormatException();
+        }
+    }
+
     @Override
     public boolean isCorrect(String str) {
         String[] lines = str.split("\\n");
@@ -37,5 +52,10 @@ public class FormatXML extends Format {
             }
         }
         return true;
+    }
+
+    private boolean isTagCorrect(String tag) {
+        Pattern pattern = Pattern.compile("\\w+");
+        return pattern.matcher(tag).matches();
     }
 }

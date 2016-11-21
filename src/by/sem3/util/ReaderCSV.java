@@ -1,4 +1,4 @@
-package by.sem3.lab6_7;
+package by.sem3.util;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package by.sem3.lab6_7;
+package by.sem3.util;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -7,18 +7,18 @@ public abstract class FormatWriter {
     private FileWriter writer;
 
     protected FormatWriter(String path) throws IOException {
-        this.writer = new FileWriter(path);
+        this.writer = new FileWriter(path, false);
     }
 
     protected void write(Format format) throws IOException {
         writer.write(format.getFormat());
     }
 
-    protected void flush() throws IOException {
+    public void flush() throws IOException {
         writer.flush();
     }
 
-    protected void close() throws IOException {
+    public void close() throws IOException {
         writer.close();
     }
 }

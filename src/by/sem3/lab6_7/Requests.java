@@ -1,25 +1,36 @@
 package by.sem3.lab6_7;
 
+import by.sem3.util.FormatJSON;
+import by.sem3.util.FormatXML;
+import by.sem3.util.IncorrectFormatException;
+import by.sem3.util.LoggerException;
+
 import java.io.IOException;
-import java.util.*;
+
+import java.util.InputMismatchException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Scanner;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 class Requests {
     public static void findByShortTitle(Companies companies)
-            throws LoggerException, CompaniesIsEmptyException, IncorrectFormatException, IOException {
+            throws LoggerException, CompaniesIsEmptyException, IncorrectFormatException, IOException,
+            IncorrectColumnsException {
         Functional.logger.write("Start search.");
         Company company = companies.findByShortTitle();
         if (company != null) {
             Functional.logger.write("Search successful.");
-            company.printColumnsNames();
-            company.print();
+            CompanyUtil.printColumnsNames();
+            CompanyUtil.print(company);
             Functional.logger.write("Start write to XML.");
-            Functional.xmlWriter.write(company.toXML());
+            Functional.xmlWriter.write(CompanyUtil.singleElementToXML(company));
             Functional.logger.write("Write to XML successful.");
             Functional.logger.write("Start write to JSON.");
-            Functional.jsonWriter.write(company.toJSON());
+            Functional.jsonWriter.write(CompanyUtil.singleElementToJSON(company));
             Functional.logger.write("Write to JSON successful.");
         } else {
             System.out.println("Not found.");
@@ -28,13 +39,14 @@ class Requests {
     }
 
     public static void filterByBranch(Companies companies, Scanner scanner)
-            throws LoggerException, CompaniesIsEmptyException, IncorrectFormatException, IOException {
+            throws LoggerException, CompaniesIsEmptyException, IncorrectFormatException, IOException,
+            IncorrectColumnsException {
         String branch;
         System.out.print("Enter branch: ");
         branch = scanner.nextLine();
         Functional.logger.write("Start filter by branch.");
-        companies.printColumnsNames();
-        companies.filterByBranch(branch).forEach(Company::print);
+        CompanyUtil.printColumnsNames();
+        companies.filterByBranch(branch).forEach(CompanyUtil::print);
         Functional.logger.write("Filter successful.");
         Functional.logger.write("Start write to XML.");
         Functional.xmlWriter.write(companies.toXML(companies.filterByBranch(branch)));
@@ -45,13 +57,14 @@ class Requests {
     }
 
     public static void filterByActivity(Companies companies, Scanner scanner)
-            throws LoggerException, CompaniesIsEmptyException, IncorrectFormatException, IOException {
+            throws LoggerException, CompaniesIsEmptyException, IncorrectFormatException, IOException,
+            IncorrectColumnsException {
         String activity;
         System.out.print("Enter activity: ");
         activity = scanner.nextLine();
         Functional.logger.write("Start filter by activity.");
-        companies.printColumnsNames();
-        companies.filterByActivity(activity).forEach(Company::print);
+        CompanyUtil.printColumnsNames();
+        companies.filterByActivity(activity).forEach(CompanyUtil::print);
         Functional.logger.write("Filter successful.");
         Functional.logger.write("Start write to XML.");
         Functional.xmlWriter.write(companies.toXML(companies.filterByActivity(activity)));
@@ -62,7 +75,8 @@ class Requests {
     }
 
     public static void filterByDateOfFoundation(Companies companies, Scanner scanner)
-            throws LoggerException, CompaniesIsEmptyException, IncorrectFormatException, IOException {
+            throws LoggerException, CompaniesIsEmptyException, IncorrectFormatException, IOException,
+            IncorrectColumnsException{
         String from;
         String to;
         System.out.print("Enter date interval:\nFrom: ");
@@ -70,8 +84,8 @@ class Requests {
         System.out.print("To: ");
         to = scanner.nextLine();
         Functional.logger.write("Start filter by date of foundation.");
-        companies.printColumnsNames();
-        companies.filterByDateOfFoundation(from, to).forEach(Company::print);
+        CompanyUtil.printColumnsNames();
+        companies.filterByDateOfFoundation(from, to).forEach(CompanyUtil::print);
         Functional.logger.write("Filter successful.");
         Functional.logger.write("Start write to XML.");
         Functional.xmlWriter.write(companies.toXML(companies.filterByDateOfFoundation(from, to)));
@@ -82,7 +96,8 @@ class Requests {
     }
 
     public static void filterByCountOfEmployees(Companies companies, Scanner scanner)
-            throws LoggerException, CompaniesIsEmptyException, IncorrectFormatException, IOException {
+            throws LoggerException, CompaniesIsEmptyException, IncorrectFormatException, IOException,
+            IncorrectColumnsException {
         int fromNum;
         int toNum;
         System.out.print("Enter count interval:\nFrom: ");
@@ -97,8 +112,8 @@ class Requests {
             return;
         }
         Functional.logger.write("Start filter by count of employees.");
-        companies.printColumnsNames();
-        companies.filterByCountOfEmployees(fromNum, toNum).forEach(Company::print);
+        CompanyUtil.printColumnsNames();
+        companies.filterByCountOfEmployees(fromNum, toNum).forEach(CompanyUtil::print);
         Functional.logger.write("Filter successful.");
         Functional.logger.write("Start write to XML.");
         Functional.xmlWriter.write(companies.toXML(companies.filterByCountOfEmployees(fromNum, toNum)));
@@ -186,11 +201,30 @@ class Requests {
 
     private static List<String> parseSQLRequestOnLogics(Scanner scanner) {
         List<String> result = new ArrayList<>();
+        Pattern pattern = Pattern.compile(".+((<)|(>)|(<=)|(>=)|(=)).+");
+        Pattern postfix = Pattern.compile(".+((<)|(>)|(<=)|(>=)|(=))");
+        Pattern prefix = Pattern.compile("((<)|(>)|(<=)|(>=)|(=)).+");
+        Matcher matcher;
+        Scanner sc;
         String token;
+        int length = pattern.matcher("").groupCount();
         boolean isLogics = false;
         while (scanner.hasNext()) {
             token = scanner.next();
-            if (isLogics) {
+            if(isLogics && (matcher = pattern.matcher(token)).matches()) {
+                sc = new Scanner(token).useDelimiter("((<=)|(>=)|(<)|(>)|(=))");
+                result.add(sc.next());
+                result.add(getLogicOperator(length, matcher));
+                result.add(sc.next());
+            } else if(isLogics && (matcher = prefix.matcher(token)).matches()) {
+                sc = new Scanner(token).useDelimiter("((<=)|(>=)|(<)|(>)|(=))");
+                result.add(getLogicOperator(length, matcher));
+                result.add(sc.next());
+            } else if(isLogics && (matcher = postfix.matcher(token)).matches()) {
+                sc = new Scanner(token).useDelimiter("((<=)|(>=)|(<)|(>)|(=))");
+                result.add(sc.next());
+                result.add(getLogicOperator(length, matcher));
+            } else if (isLogics && !token.isEmpty()){
                 result.add(token);
             }
             if (token.equalsIgnoreCase("where")) {
@@ -198,6 +232,32 @@ class Requests {
             }
         }
         return result;
+    }
+
+    private static String getLogicOperator(int length, Matcher matcher) {
+        for(int i = 2; i < length + 1; i++) {
+            if(matcher.group(i) != null){
+                return logicOperators(i);
+            }
+        }
+        return null;
+    }
+
+    private static String logicOperators(int number) {
+        switch (number) {
+            case 2:
+                return "<";
+            case 3:
+                return ">";
+            case 4:
+                return "<=";
+            case 5:
+                return ">=";
+            case 6:
+                return "=";
+            default:
+                return null;
+        }
     }
 
     private static void printNamesOfColumns(String format, String[] columns) {
@@ -320,6 +380,37 @@ class Requests {
         }
     }
 
+    private static String namesOfColumnsToNameOfField(int numberOfColumn) {
+        switch (numberOfColumn) {
+            case 2:
+                return "name";
+            case 3:
+                return "shortTitle";
+            case 4:
+                return "dateUpdate";
+            case 5:
+                return "address";
+            case 6:
+                return "dateFoundation";
+            case 7:
+                return "countEmployees";
+            case 8:
+                return "auditor";
+            case 9:
+                return "phone";
+            case 10:
+                return "email";
+            case 11:
+                return "branch";
+            case 12:
+                return "activity";
+            case 13:
+                return "link";
+            default:
+                return null;
+        }
+    }
+
     private static String[] fillColumns(int[] groups, Company company, Pattern patternColumns) {
         List<String> columns = new ArrayList<>();
         String[] result;
@@ -344,13 +435,13 @@ class Requests {
             case 3:
                 return company.getShortTitle();
             case 4:
-                return company.getDateUpdateAsString();
+                return CompanyUtil.dateToString(company.getDateUpdate());
             case 5:
                 return company.getAddress();
             case 6:
-                return company.getDateFoundationAsString();
+                return CompanyUtil.dateToString(company.getDateFoundation());
             case 7:
-                return ((Integer) company.getCountEmployees()).toString();
+                return ((Integer)company.getCountEmployees()).toString();
             case 8:
                 return company.getAuditor();
             case 9:
@@ -449,75 +540,12 @@ class Requests {
         }
     }
 
-    private static String columnToXML(int numberOfColumn, Company company) {
-        switch (numberOfColumn) {
-            case 2:
-                return company.getNameAsXML();
-            case 3:
-                return company.getShortTitleAsXML();
-            case 4:
-                return company.getDateUpdateAsXML();
-            case 5:
-                return company.getAddressAsXML();
-            case 6:
-                return company.getDateFoundationAsXML();
-            case 7:
-                return company.getCountEmployeesAsXML();
-            case 8:
-                return company.getAuditorAsXML();
-            case 9:
-                return company.getPhoneAsXML();
-            case 10:
-                return company.getEmailAsXML();
-            case 11:
-                return company.getBranchAsXML();
-            case 12:
-                return company.getActivityAsXML();
-            case 13:
-                return company.getLinkAsXML();
-            default:
-                return null;
-        }
-    }
-
-    private static String columnToJSON(int numberOfColumn, Company company) {
-        switch (numberOfColumn) {
-            case 2:
-                return company.getNameAsJSON();
-            case 3:
-                return company.getShortTitleAsJSON();
-            case 4:
-                return company.getDateUpdateAsJSON();
-            case 5:
-                return company.getAddressAsJSON();
-            case 6:
-                return company.getDateFoundationAsJSON();
-            case 7:
-                return company.getCountEmployeesAsJSON();
-            case 8:
-                return company.getAuditorAsJSON();
-            case 9:
-                return company.getPhoneAsJSON();
-            case 10:
-                return company.getEmailAsJSON();
-            case 11:
-                return company.getBranchAsJSON();
-            case 12:
-                return company.getActivityAsJSON();
-            case 13:
-                return company.getLinkAsJSON();
-            default:
-                return null;
-        }
-    }
-
     private static FormatXML getElementAsXML(int[] groups, Company company) throws IncorrectFormatException {
         FormatXML xml = new FormatXML();
         xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<company>\n");
         for (int group : groups) {
             xml.append("\t");
-            xml.append(columnToXML(group, company));
-            xml.append("\n");
+            xml.appendWithTag(namesOfColumnsToNameOfField(group), getColumn(group, company));
         }
         xml.append("</company>");
         return xml;
@@ -528,7 +556,7 @@ class Requests {
         json.append("{\n");
         for (int i = 0; i < groups.length; i++) {
             json.append("\t");
-            json.append(columnToJSON(groups[i], company));
+            json.appendWithNameOfField(namesOfColumnsToNameOfField(groups[i]), getColumn(groups[i], company));
             if (i < groups.length - 1) {
                 json.append(",");
             }
@@ -543,26 +571,24 @@ class Requests {
         FormatXML xml = new FormatXML();
         Company current;
         Iterator<Company> iterator = selection.iterator();
-        xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<companies>\n\t<companiesList>\n");
+        xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<companies>\n");
         while (iterator.hasNext()) {
-            xml.append("\t\t<company>\n");
+            xml.append("\t<company>\n");
             current = iterator.next();
             if (groups.length == 1) {
                 for (int i = 2; i < numberOfGroups; i++) {
-                    xml.append("\t\t\t");
-                    xml.append(columnToXML(i, current));
-                    xml.append("\n");
+                    xml.append("\t\t");
+                    xml.appendWithTag(namesOfColumnsToNameOfField(i), getColumn(i, current));
                 }
             } else {
                 for (int group : groups) {
-                    xml.append("\t\t\t");
-                    xml.append(columnToXML(group, current));
-                    xml.append("\n");
+                    xml.append("\t\t");
+                    xml.appendWithTag(namesOfColumnsToNameOfField(group), getColumn(group, current));
                 }
             }
-            xml.append("\t\t</company>\n");
+            xml.append("\t</company>\n");
         }
-        xml.append("\t</companiesList>\n</companies>");
+        xml.append("</companies>");
         return xml;
     }
 
@@ -578,7 +604,7 @@ class Requests {
             if (groups.length == 1) {
                 for (int i = 2; i < numberOfGroups; i++) {
                     json.append("\t\t\t");
-                    json.append(columnToJSON(i, current));
+                    json.appendWithNameOfField(namesOfColumnsToNameOfField(i), getColumn(i, current));
                     if (i < numberOfGroups - 1) {
                         json.append(",");
                     }
@@ -587,7 +613,8 @@ class Requests {
             } else {
                 for (int i = 0; i < groups.length; i++) {
                     json.append("\t\t\t");
-                    json.append(columnToJSON(groups[i], iterator.next()));
+                    json.appendWithNameOfField(namesOfColumnsToNameOfField(groups[i]),
+                            getColumn(groups[i], current));
                     if (i < groups.length - 1) {
                         json.append(",");
                     }

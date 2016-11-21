@@ -1,5 +1,7 @@
 package by.sem3.lab6_7;
 
+import by.sem3.util.*;
+
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -39,7 +41,8 @@ class Functional {
     }
 
     private static void menu(Companies companies)
-            throws IOException, IncorrectFormatException, CompaniesIsEmptyException, LoggerException {
+            throws IOException, IncorrectFormatException, CompaniesIsEmptyException, LoggerException,
+            IncorrectColumnsException {
         Scanner scanner = new Scanner(System.in);
         boolean isContinue;
         int counter = 1;
@@ -50,11 +53,11 @@ class Functional {
                 switch (scanner.nextInt()) {
                     case 1:
                         logger.write("Request type is: simple.");
-                        submenuSimpleRequest(companies, counter, scanner);
+                        counter = submenuSimpleRequest(companies, counter, scanner);
                         break;
                     case 2:
                         logger.write("Request type is: SQL.");
-                        submenuSQLRequest(companies, counter, scanner);
+                        counter = submenuSQLRequest(companies, counter, scanner);
                         break;
                     default:
                         logger.write("Method \"menu\": Answer is not in range from 1 to 2.");
@@ -70,8 +73,9 @@ class Functional {
         scanner.close();
     }
 
-    private static void submenuSimpleRequest(Companies companies, int counter, Scanner scanner)
-            throws IOException, LoggerException, CompaniesIsEmptyException, IncorrectFormatException {
+    private static int submenuSimpleRequest(Companies companies, int counter, Scanner scanner)
+            throws IOException, LoggerException, CompaniesIsEmptyException, IncorrectFormatException,
+            IncorrectColumnsException {
         boolean isContinue;
         do {
             System.out.print("\tChoose an action:\n1. Find company by short title.\n" +
@@ -118,9 +122,10 @@ class Functional {
             isContinue = isContinuing("You want to continue with simple requests?\n1. Yes.\n" +
                     "2. No(Return to type selection).\nEnter your choice: ", scanner);
         } while (isContinue);
+        return counter;
     }
 
-    private static void submenuSQLRequest(Companies companies, int counter, Scanner scanner)
+    private static int submenuSQLRequest(Companies companies, int counter, Scanner scanner)
             throws LoggerException, IncorrectFormatException, IOException {
         String request;
         boolean isContinue;
@@ -152,6 +157,7 @@ class Functional {
             isContinue = isContinuing("You want to continue with SQL requests?\n1. Yes.\n" +
                     "2. No(Return to type selection).\nEnter your choice: ", scanner);
         } while(isContinue);
+        return counter;
     }
 
     private static void filesCreation(int counter) throws IOException, LoggerException {
