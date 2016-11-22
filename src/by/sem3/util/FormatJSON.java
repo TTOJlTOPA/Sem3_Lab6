@@ -26,11 +26,11 @@ public class FormatJSON extends Format {
             super.append("\"");
             super.append(field);
             super.append("\": ");
-            try{
+            try {
                 Double.parseDouble(str);
                 super.append(str);
-            } catch(NumberFormatException e) {
-                if(str.equals("true") || str.equals("false")){
+            } catch (NumberFormatException e) {
+                if (str.equals("true") || str.equals("false")) {
                     super.append(str);
                 }
                 super.append("\"");

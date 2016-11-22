@@ -76,7 +76,7 @@ class Requests {
 
     public static void filterByDateOfFoundation(Companies companies, Scanner scanner)
             throws LoggerException, CompaniesIsEmptyException, IncorrectFormatException, IOException,
-            IncorrectColumnsException{
+            IncorrectColumnsException {
         String from;
         String to;
         System.out.print("Enter date interval:\nFrom: ");
@@ -201,30 +201,30 @@ class Requests {
 
     private static List<String> parseSQLRequestOnLogics(Scanner scanner) {
         List<String> result = new ArrayList<>();
-        Pattern pattern = Pattern.compile(".+((<)|(>)|(<=)|(>=)|(=)).+");
+        Pattern central = Pattern.compile(".+((<)|(>)|(<=)|(>=)|(=)).+");
         Pattern postfix = Pattern.compile(".+((<)|(>)|(<=)|(>=)|(=))");
         Pattern prefix = Pattern.compile("((<)|(>)|(<=)|(>=)|(=)).+");
         Matcher matcher;
         Scanner sc;
         String token;
-        int length = pattern.matcher("").groupCount();
+        int length = central.matcher("").groupCount();
         boolean isLogics = false;
         while (scanner.hasNext()) {
             token = scanner.next();
-            if(isLogics && (matcher = pattern.matcher(token)).matches()) {
+            if (isLogics && (matcher = central.matcher(token)).matches()) {
                 sc = new Scanner(token).useDelimiter("((<=)|(>=)|(<)|(>)|(=))");
                 result.add(sc.next());
                 result.add(getLogicOperator(length, matcher));
                 result.add(sc.next());
-            } else if(isLogics && (matcher = prefix.matcher(token)).matches()) {
+            } else if (isLogics && (matcher = prefix.matcher(token)).matches()) {
                 sc = new Scanner(token).useDelimiter("((<=)|(>=)|(<)|(>)|(=))");
                 result.add(getLogicOperator(length, matcher));
                 result.add(sc.next());
-            } else if(isLogics && (matcher = postfix.matcher(token)).matches()) {
+            } else if (isLogics && (matcher = postfix.matcher(token)).matches()) {
                 sc = new Scanner(token).useDelimiter("((<=)|(>=)|(<)|(>)|(=))");
                 result.add(sc.next());
                 result.add(getLogicOperator(length, matcher));
-            } else if (isLogics && !token.isEmpty()){
+            } else if (isLogics && !token.isEmpty()) {
                 result.add(token);
             }
             if (token.equalsIgnoreCase("where")) {
@@ -235,8 +235,8 @@ class Requests {
     }
 
     private static String getLogicOperator(int length, Matcher matcher) {
-        for(int i = 2; i < length + 1; i++) {
-            if(matcher.group(i) != null){
+        for (int i = 2; i < length + 1; i++) {
+            if (matcher.group(i) != null) {
                 return logicOperators(i);
             }
         }
@@ -260,8 +260,8 @@ class Requests {
         }
     }
 
-    private static void printNamesOfColumns(String format, String[] columns) {
-        System.out.format(format, columns);
+    private static void printNamesOfColumns(String format, String[] namesOfColumns) {
+        System.out.format(format, namesOfColumns);
         System.out.println();
     }
 
@@ -441,7 +441,7 @@ class Requests {
             case 6:
                 return CompanyUtil.dateToString(company.getDateFoundation());
             case 7:
-                return ((Integer)company.getCountEmployees()).toString();
+                return ((Integer) company.getCountEmployees()).toString();
             case 8:
                 return company.getAuditor();
             case 9:

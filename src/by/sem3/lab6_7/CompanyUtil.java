@@ -51,7 +51,7 @@ class CompanyUtil {
         xml.append("\t");
         xml.appendWithTag("dateFoundation", dateToString(company.getDateFoundation()));
         xml.append("\t");
-        xml.appendWithTag("countEmployees", ((Integer)company.getCountEmployees()).toString());
+        xml.appendWithTag("countEmployees", ((Integer) company.getCountEmployees()).toString());
         xml.append("\t");
         xml.appendWithTag("auditor", company.getAuditor());
         xml.append("\t");
@@ -82,7 +82,7 @@ class CompanyUtil {
         xml.append("\t\t");
         xml.appendWithTag("dateFoundation", dateToString(company.getDateFoundation()));
         xml.append("\t\t");
-        xml.appendWithTag("countEmployees", ((Integer)company.getCountEmployees()).toString());
+        xml.appendWithTag("countEmployees", ((Integer) company.getCountEmployees()).toString());
         xml.append("\t\t");
         xml.appendWithTag("auditor", company.getAuditor());
         xml.append("\t\t");
@@ -112,7 +112,7 @@ class CompanyUtil {
         json.append(",\n\t");
         json.appendWithNameOfField("dateFoundation", dateToString(company.getDateFoundation()));
         json.append(",\n\t");
-        json.appendWithNameOfField("countEmployees", ((Integer)company.getCountEmployees()).toString());
+        json.appendWithNameOfField("countEmployees", ((Integer) company.getCountEmployees()).toString());
         json.append(",\n\t");
         json.appendWithNameOfField("auditor", company.getAuditor());
         json.append(",\n\t");
@@ -142,7 +142,7 @@ class CompanyUtil {
         json.append(",\n\t\t\t");
         json.appendWithNameOfField("dateFoundation", dateToString(company.getDateFoundation()));
         json.append(",\n\t\t\t");
-        json.appendWithNameOfField("countEmployees", ((Integer)company.getCountEmployees()).toString());
+        json.appendWithNameOfField("countEmployees", ((Integer) company.getCountEmployees()).toString());
         json.append(",\n\t\t\t");
         json.appendWithNameOfField("auditor", company.getAuditor());
         json.append(",\n\t\t\t");

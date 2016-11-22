@@ -110,7 +110,7 @@ class Companies {
         }
     }
 
-    public Iterator<Company> getIterator () {
+    public Iterator<Company> getIterator() {
         return companies.iterator();
     }
 

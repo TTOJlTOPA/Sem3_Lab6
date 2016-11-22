@@ -22,7 +22,7 @@ public class FormatXML extends Format {
     }
 
     public void appendWithTag(String tag, String str) throws IncorrectFormatException {
-        if(isCorrect(str) && isTagCorrect(tag)){
+        if (isCorrect(str) && isTagCorrect(tag)) {
             super.append("<");
             super.append(tag);
             super.append(">");

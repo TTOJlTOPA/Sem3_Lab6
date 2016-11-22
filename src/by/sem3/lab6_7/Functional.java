@@ -156,7 +156,7 @@ class Functional {
             }
             isContinue = isContinuing("You want to continue with SQL requests?\n1. Yes.\n" +
                     "2. No(Return to type selection).\nEnter your choice: ", scanner);
-        } while(isContinue);
+        } while (isContinue);
         return counter;
     }
 
@@ -176,7 +176,7 @@ class Functional {
         return counter;
     }
 
-    private static boolean isContinuing(String header, Scanner scanner) throws LoggerException{
+    private static boolean isContinuing(String header, Scanner scanner) throws LoggerException {
         System.out.print(header);
         try {
             switch (scanner.nextInt()) {
