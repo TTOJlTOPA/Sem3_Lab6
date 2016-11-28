@@ -200,7 +200,7 @@ class Functional {
                 "(dateF[o0]undat[i1][o0]n)|(c[o0]untEmpl[o0]yees)|(aud[i1]t[o0]r)|(ph[o0]ne)|(ema[i1]l)|(branch)|" +
                 "(act[i1]v[i1]ty)|(l[i1]nk))(,[ ]?((name)|(sh[o0]rtT[i1]tle)|(dateUpdate)|(address)|" +
                 "(dateF[o0]undat[i1][o0]n)|(c[o0]untEmpl[o0]yees)|(aud[i1]t[o0]r)|(ph[o0]ne)|(ema[i1]l)|(branch)|" +
-                "(act[i1]v[i1]ty)|(l[i1]nk)))+)|(ALL)) FROM dataBase( WHERE (((name)|(sh[o0]rtT[i1]tle)|(dateUpdate)|" +
+                "(act[i1]v[i1]ty)|(l[i1]nk)))+)|((ALL)|\\*)) FROM dataBase( WHERE (((name)|(sh[o0]rtT[i1]tle)|(dateUpdate)|" +
                 "(address)|(dateF[o0]undat[i1][o0]n)|(c[o0]untEmpl[o0]yees)|(aud[i1]t[o0]r)|(ph[o0]ne)|(ema[i1]l)|" +
                 "(branch)|(act[i1]v[i1]ty)|(l[i1]nk))(( BETWEEN (\\d+|('[\\w+&\"\\-:! ]+')) " +
                 "AND (\\d+|('[\\w+&\"\\-:! ]+')))|(([ ]?(([<>][=]?)|(=))[ ]?(\\d+|('[\\w+&\"\\-:! ]+')))( " +

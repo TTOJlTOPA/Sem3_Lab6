@@ -131,21 +131,23 @@ class Requests {
         String format;
         String[] columnsNames;
         int groups[];
+        int numberOfColumns;
         Pattern patternColumns = Pattern.compile("((name)|(sh[o0]rtT[i1]tle)|(dateUpdate)|(address)|" +
                 "(dateF[o0]undat[i1][o0]n)|(c[o0]untEmpl[o0]yees)|(aud[i1]t[o0]r)|(ph[o0]ne)|(ema[i1]l)|(branch)|" +
-                "(act[i1]v[i1]ty)|(l[i1]nk)|(all))", Pattern.CASE_INSENSITIVE);
+                "(act[i1]v[i1]ty)|(l[i1]nk)|(all)|(\\*))", Pattern.CASE_INSENSITIVE);
+        numberOfColumns = patternColumns.matcher("").groupCount() - 1;
         Functional.logger.write("Start parsing SQL request.");
         columns = parseSQLRequestOnColumns(patternColumns, scanner);
         logics = parseSQLRequestOnLogics(scanner);
         groups = numbersOfGroups(columns, patternColumns);
         format = formatOfColumns(groups);
-        columnsNames = fillNamesOfColumns(groups, patternColumns);
-        selectionSQL(companies, logics, format, columnsNames, groups, patternColumns);
+        columnsNames = fillNamesOfColumns(groups, numberOfColumns);
+        selectionSQL(companies, logics, format, columnsNames, groups, patternColumns, numberOfColumns);
         scanner.close();
     }
 
     private static void selectionSQL(Companies companies, List<String> logics, String format, String[] columnsNames,
-                                     int[] groups, Pattern patternColumns)
+                                     int[] groups, Pattern patternColumns, int numberOfColumns)
             throws LoggerException, IncorrectFormatException, IOException {
         Iterator<Company> iterator;
         List<Company> selection = companies.getStream()
@@ -156,16 +158,16 @@ class Requests {
             if (selection.size() > 1) {
                 iterator = selection.iterator();
                 while (iterator.hasNext()) {
-                    printElement(format, fillColumns(groups, iterator.next(), patternColumns));
+                    printElement(format, fillColumns(groups, iterator.next(), numberOfColumns));
                 }
                 Functional.logger.write("Start write to XML.");
-                Functional.xmlWriter.write(getArrayAsXML(groups, selection, patternColumns.matcher("").groupCount()));
+                Functional.xmlWriter.write(getArrayAsXML(groups, selection, numberOfColumns));
                 Functional.logger.write("Write to XML successful.");
                 Functional.logger.write("Start write to JSON.");
-                Functional.jsonWriter.write(getArrayAsJSON(groups, selection, patternColumns.matcher("").groupCount()));
+                Functional.jsonWriter.write(getArrayAsJSON(groups, selection, numberOfColumns));
                 Functional.logger.write("Write to JSON successful.");
             } else {
-                printElement(format, fillColumns(groups, selection.get(0), patternColumns));
+                printElement(format, fillColumns(groups, selection.get(0), numberOfColumns));
                 Functional.logger.write("Start write to XML.");
                 Functional.xmlWriter.write(getElementAsXML(groups, selection.get(0)));
                 Functional.logger.write("Write to XML successful.");
@@ -327,17 +329,18 @@ class Requests {
                 return "%-20s";
             case 14:
                 return "%-9s%-16s%-19s%-19s%-28s%-23s%-12s%-12s%-20s%-20s%-15s%-20s";
+            case 15:
+                return "%-9s%-16s%-19s%-19s%-28s%-23s%-12s%-12s%-20s%-20s%-15s%-20s";
             default:
                 return null;
         }
     }
 
-    private static String[] fillNamesOfColumns(int[] groups, Pattern patternColumns) {
+    private static String[] fillNamesOfColumns(int[] groups, int numberOfColumns) {
         List<String> columnsNames = new ArrayList<>();
         String[] result;
-        int totalNumberOfGroups = patternColumns.matcher("").groupCount();
-        if (groups.length == 1 && groups[0] == totalNumberOfGroups) {
-            for (int i = 2; i < totalNumberOfGroups; i++) {
+        if (groups.length == 1) {
+            for (int i = 2; i < numberOfColumns; i++) {
                 columnsNames.add(namesOfColumns(i));
             }
         } else {
@@ -411,12 +414,11 @@ class Requests {
         }
     }
 
-    private static String[] fillColumns(int[] groups, Company company, Pattern patternColumns) {
+    private static String[] fillColumns(int[] groups, Company company, int numberOfColumns) {
         List<String> columns = new ArrayList<>();
         String[] result;
-        int totalNumberOfGroups = patternColumns.matcher("").groupCount();
-        if (groups.length == 1 && groups[0] == totalNumberOfGroups) {
-            for (int i = 2; i < totalNumberOfGroups; i++) {
+        if (groups.length == 1) {
+            for (int i = 2; i < numberOfColumns; i++) {
                 columns.add(getColumn(i, company));
             }
         } else {
@@ -505,25 +507,42 @@ class Requests {
     private static boolean getResultOfBetweenPredicate(Iterator<String> iterator, String field) {
         String lowerBound;
         String upperBound;
+        double fieldNumber;
         lowerBound = iterator.next();
         iterator.next();
         upperBound = iterator.next();
+        try {
+            fieldNumber = Double.parseDouble(field);
+            double lowerBoundNumber = Double.parseDouble(lowerBound);
+            double upperBoundNumber = Double.parseDouble(upperBound);
+            return fieldNumber >= lowerBoundNumber && fieldNumber <= upperBoundNumber;
+        } catch (NumberFormatException e) {
+        }
         return field.compareTo(lowerBound) >= 0 && field.compareTo(upperBound) <= 0;
     }
 
     private static boolean getResultOfPredicateWithComparisonOperator(String field, String rightElement,
                                                                       String comparisonOperator) {
+        double fieldNumber = 0;
+        double rightElementNumber = 0;
+        boolean isNumber = false;
+        try {
+            fieldNumber = Double.parseDouble(field);
+            rightElementNumber = Double.parseDouble(rightElement);
+            isNumber = true;
+        } catch (NumberFormatException e) {
+        }
         switch (comparisonOperator) {
             case "<":
-                return field.compareTo(rightElement) < 0;
+                return isNumber ? fieldNumber < rightElementNumber : field.compareTo(rightElement) < 0;
             case "<=":
-                return field.compareTo(rightElement) <= 0;
+                return isNumber ? fieldNumber <= rightElementNumber : field.compareTo(rightElement) <= 0;
             case ">":
-                return field.compareTo(rightElement) > 0;
+                return isNumber ? fieldNumber > rightElementNumber : field.compareTo(rightElement) > 0;
             case ">=":
-                return field.compareTo(rightElement) >= 0;
+                return isNumber ? fieldNumber >= rightElementNumber : field.compareTo(rightElement) >= 0;
             case "=":
-                return field.compareTo(rightElement) == 0;
+                return isNumber ? fieldNumber == rightElementNumber : field.compareTo(rightElement) == 0;
             default:
                 return false;
         }
@@ -566,7 +585,7 @@ class Requests {
         return json;
     }
 
-    private static FormatXML getArrayAsXML(int[] groups, List<Company> selection, int numberOfGroups)
+    private static FormatXML getArrayAsXML(int[] groups, List<Company> selection, int numberOfColumns)
             throws IncorrectFormatException {
         FormatXML xml = new FormatXML();
         Company current;
@@ -576,7 +595,7 @@ class Requests {
             xml.append("\t<company>\n");
             current = iterator.next();
             if (groups.length == 1) {
-                for (int i = 2; i < numberOfGroups; i++) {
+                for (int i = 2; i < numberOfColumns; i++) {
                     xml.append("\t\t");
                     xml.appendWithTag(namesOfColumnsToNameOfField(i), getColumn(i, current));
                 }
@@ -592,7 +611,7 @@ class Requests {
         return xml;
     }
 
-    private static FormatJSON getArrayAsJSON(int[] groups, List<Company> selection, int numberOfGroups)
+    private static FormatJSON getArrayAsJSON(int[] groups, List<Company> selection, int numberOfColumns)
             throws IncorrectFormatException {
         FormatJSON json = new FormatJSON();
         Company current;
@@ -602,10 +621,10 @@ class Requests {
             json.append("\t\t{\n");
             current = iterator.next();
             if (groups.length == 1) {
-                for (int i = 2; i < numberOfGroups; i++) {
+                for (int i = 2; i < numberOfColumns; i++) {
                     json.append("\t\t\t");
                     json.appendWithNameOfField(namesOfColumnsToNameOfField(i), getColumn(i, current));
-                    if (i < numberOfGroups - 1) {
+                    if (i < numberOfColumns - 1) {
                         json.append(",");
                     }
                     json.append("\n");
